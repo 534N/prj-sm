@@ -22,3 +22,5 @@ accounts-ui
 accounts-password
 simple:rest
 email
+fourseven:scss
+momentjs:moment

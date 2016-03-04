@@ -45,19 +45,21 @@ MyOrder = React.createClass({
       <div className='container'>
         <header>
           <h1>Orders ({this.data.incompleteCount})</h1>
-          <AccountsUIWrapper />
-          <hr />
-          <label className='hide-completed'>
-            <input
-              type='checkbox'
-              readOnly={true}
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted} />
-            Hide Completed Tasks
-          </label>
+          {
+            // <AccountsUIWrapper />
+            // <hr />
+            // <label className='hide-completed'>
+            //   <input
+            //     type='checkbox'
+            //     readOnly={true}
+            //     checked={this.state.hideCompleted}
+            //     onClick={this.toggleHideCompleted} />
+            //   Hide Completed Tasks
+            // </label>
+          }
         </header>
  
-        <ul>
+        <ul id='order-list'>
           {this.renderOrders()}
         </ul>
       </div>

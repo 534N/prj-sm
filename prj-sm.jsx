@@ -15,7 +15,7 @@ if (Meteor.isClient) {
   Meteor.subscribe('dishes');
 
   Meteor.startup(function () {
-    ReactDOM.render(<Routes />, document.body);
+    ReactDOM.render(<Routes />, document.getElementById('root'));
   });
 }
 
@@ -29,6 +29,8 @@ if (Meteor.isServer) {
   Meteor.publish("dishes", function () {
     return Dishes.find({});
   });
+
+
 
   // 
   // 
@@ -53,6 +55,21 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
+
+  sendEmail(to, from, subject, text) {
+    check([to, from, subject, text], [String]);
+
+    // Let other method calls from the same client start running,
+    // without waiting for the email sending to complete.
+    this.unblock();
+
+    Email.send({
+      to: to,
+      from: from,
+      subject: subject,
+      text: text
+    });
+  },
 
   getDishes(owner) {
     const dishes = Dishes.find({owner: owner}).fetch();

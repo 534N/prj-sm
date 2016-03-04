@@ -27,24 +27,35 @@ Order = React.createClass({
   render() {
     // Give tasks a different className when they are checked off,
     // so that we can style them nicely in CSS
-    const taskClassName = (this.props.order.checked ? 'checked' : '');
+    const orderClassName = 'order ' + (this.props.order.checked ? 'checked' : '');
     console.debug(this.props.order);
     return (
-      <li className={taskClassName}>
-        <div>Order: {this.props.order._id} [{this.props.order.createdAt.toString()}]</div>
-        <div>Total Price: {this.props.order.totalPrice}</div>
-        <div>Total Quantity: {this.props.order.totalQuantity}</div>
-        <table>
+      <li className={orderClassName}>
+        <div className='summary'>
+          <div className='info'>
+            <div>订单号: {this.props.order._id}</div> 
+            <div> 订餐时间: {moment(this.props.order.createdAt).format('MMMM Do YYYY, h:mm:ss a')} </div>
+            <div className='name'>姓名: {this.props.order.customer.name}</div>
+            <div className='phone'>电话: {this.props.order.customer.phone}</div>
+          </div>
+          <div className='price'>
+            ${this.props.order.totalPrice}
+          </div>
+        </div>
+        <div className='customer'>
+          
+        </div>
+        <table className='orders'>
           <tbody>
           {
             this._renderItem()
           }
           </tbody>
         </table>
-        <div>Customer</div>
-        <div>Name: {this.props.order.customer.name}</div>
-        <div>Phone: {this.props.order.customer.phone}</div>
-        <div>Comment: {this.props.order.comment}</div>
+        {
+          this.props.order.comment.length > 0 &&
+          <div className='comment'>备注: {this.props.order.comment}</div>
+        }
       </li>
     );
   }
