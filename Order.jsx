@@ -1,5 +1,15 @@
 // Task component - represents a single todo item
+// const {
+//   RaisedButton
+// } = MUI;
+
 Order = React.createClass({
+  getInitialState() {
+    return {
+      processing: false,
+    }
+  },
+
   propTypes: {
     order: React.PropTypes.object.isRequired,
   },
@@ -13,12 +23,12 @@ Order = React.createClass({
     return (
       Object.keys(this.props.order.items).map(key => {
         const item = this.props.order.items[key];
+        if (item.quantity === 0) {
+          return;
+        }
+
         return (
-          <tr key={key}>
-            <td>{item.name}</td>
-            <td>{item.quantity}{item.unit}</td>
-            <td>${item.price}</td>
-          </tr>
+          <li key={key}> {item.name} x {item.quantity}{item.unit} </li>
         )
       })
     );
@@ -27,36 +37,45 @@ Order = React.createClass({
   render() {
     // Give tasks a different className when they are checked off,
     // so that we can style them nicely in CSS
-    const orderClassName = 'order ' + (this.props.order.checked ? 'checked' : '');
-    console.debug(this.props.order);
-    return (
-      <li className={orderClassName}>
-        <div className='summary'>
-          <div className='info'>
-            <div>订单号: {this.props.order._id}</div> 
-            <div> 订餐时间: {moment(this.props.order.createdAt).format('MMMM Do YYYY, h:mm:ss a')} </div>
-            <div className='name'>姓名: {this.props.order.customer.name}</div>
-            <div className='phone'>电话: {this.props.order.customer.phone}</div>
-          </div>
-          <div className='price'>
-            ${this.props.order.totalPrice}
-          </div>
-        </div>
-        <div className='customer'>
-          
-        </div>
-        <table className='orders'>
-          <tbody>
-          {
-            this._renderItem()
-          }
-          </tbody>
-        </table>
-        {
-          this.props.order.comment.length > 0 &&
-          <div className='comment'>备注: {this.props.order.comment}</div>
-        }
-      </li>
+    const orderClassName = classNames(
+      'order',
+      {
+        checked: this.props.order.checked,
+        new: !this.props.order.existing && !this.state.processing,
+        processing: this.state.processing
+      }
     );
+
+    return (
+      <tr className={orderClassName}>
+        <td>
+          <div className='customer-info'>
+            下单时间: {moment(this.props.order.createdAt).format('L')} {moment(this.props.order.createdAt).format('LT')}, 电话: {this.props.order.customer.phone}
+          </div>
+          <ul>
+            { this._renderItem() }
+          </ul>
+        </td>
+        <td className='other price'>
+          $ { this.props.order.totalPrice }
+        </td>
+        <td className='other'>
+          { this.props.order.pickup }
+        </td>
+        <td className='other'>
+          { this.props.order.comment }
+        </td>
+        <td className='other'>
+          <div className='button start' onClick={this._startProcessing}>开始处理</div>
+          <div className='button progress'>处理完毕</div>
+        </td>
+      </tr>
+    );
+  },
+
+  _startProcessing() {
+    this.setState({
+      processing: true,
+    });
   }
 });

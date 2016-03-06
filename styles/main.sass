@@ -2,7 +2,7 @@
 @import 'includes/_prefixer-mixin'
 
 html
-  background: #f5f5f5
+  background: #fff
   height: 100%
 
 body
@@ -12,39 +12,104 @@ body
 #order-list
   margin: 0
   padding: 0
-  font-size: 1.2em
-  .order
-    background: #fff
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3)
-    padding: 1em
-    margin-bottom: 1em
-    @include flexbox
-    @include flex-direction(column)
-    tr
-      line-height: 2em
+  table
+    width: 100%
+    thead
+      background: #f1f1f1
+      color: #646464
+      th
+        padding: 10px
+    tbody
+      border-collapse: collapse
+      tr
+        border-bottom: 1px solid #ddd
+      .order
+        &.new 
+          .customer-info
+            border-top: 3px solid #f54
+            color: #f54
+            font-weight: 200
 
-      td
-        text-align: center
-    .summary
-      @include flexbox
-      @include flex-direction(row)
-      font-style: italic
-      color: #aaa
-      .info
-        @include flex-basis(50%)
-      .price
-        @include flex-basis(50%)
-        text-align: right
-        font-size: 2em
-        color: #69cb95
-        font-style: normal
-    .orders
-      width: 100%
-      margin-top: 1em
-      border-top: 1px solid #ccc
-      font-size: 1.1em
+        &.processing 
+          .customer-info
+            border-top: 3px solid #F6C674
+            color: #F6C674
+            font-weight: 200
+          .start
+            display: none
+          .progress
+            display: block !important
+        td 
+          padding: 10px
+          border-left: 3px solid transparent
+          &.other
+            padding-top: 2em
+            text-align: center
+          &.price 
+            color: #0088cc
+            font-style: italic
+          .customer-info
+            position: absolute
+            margin: 5px 0
+            font-weight: 100
+            left: 20px
+            width: 93%
+            border-top: 1px dashed #ddd
+            padding: 5px
+          ul
+            margin-top: 2.5em
+            li 
+              list-style-type: none
+          .button
+            padding: 5px
+            color: #fff
+            cursor: pointer
+            opacity: 0.9
+            &:hover 
+              opacity: 1
+            &.start
+              background: #69cb95
+            &.progress
+              display: none
+              background: #F6C674
+            &.finish
 
-      .total
-        background: #828E9A
-        color: #F6C674
-    .comment
+
+    // background: #fff
+    // box-shadow: 0 1px 2px rgba(0,0,0,0.3)
+    // padding: 1em
+    // margin-bottom: 1em
+    // @include flexbox
+    // @include flex-direction(column)
+    // &.new
+
+    // tr
+    //   line-height: 1.5em
+
+    //   td
+    //     text-align: right
+    // .summary
+    //   @include flexbox
+    //   @include flex-direction(row)
+    //   font-style: italic
+    //   color: #aaa
+    //   .info
+    //     @include flex-basis(50%)
+    //     display: none
+    //   .price
+    //     @include flex-basis(100%)
+    //     text-align: right
+    //     font-size: 1.5em
+    //     color: #69cb95
+    //     font-weight: 200
+    //     font-style: normal
+    // .orders
+    //   width: 100%
+    //   margin-top: 5px
+    //   border-top: 1px solid #ccc
+    //   font-size: 1.1em
+
+    //   .total
+    //     background: #828E9A
+    //     color: #F6C674
+    // .comment

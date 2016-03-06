@@ -28,6 +28,10 @@ MyOrder = React.createClass({
  
   renderOrders() {
     return this.data.orders.map((order) => {
+      if (order.totalQuantity === 0) {
+        return;
+      }
+
       return <Order
         key={order._id}
         order={order} />;
@@ -39,29 +43,33 @@ MyOrder = React.createClass({
       hideCompleted: ! this.state.hideCompleted
     });
   },
+
+
  
   render() {
     return (
-      <div className='container'>
+      <div className='container' id='order-list'>
         <header>
-          <h1>Orders ({this.data.incompleteCount})</h1>
-          {
-            // <AccountsUIWrapper />
-            // <hr />
-            // <label className='hide-completed'>
-            //   <input
-            //     type='checkbox'
-            //     readOnly={true}
-            //     checked={this.state.hideCompleted}
-            //     onClick={this.toggleHideCompleted} />
-            //   Hide Completed Tasks
-            // </label>
-          }
+          <h1>未处理订单 ({this.data.incompleteCount})</h1>
+          <div>
+            <div className='button'></div>
+          </div>
         </header>
  
-        <ul id='order-list'>
-          {this.renderOrders()}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>订单内容</th>
+              <th>价格</th>
+              <th>取货时间</th>
+              <th>备注</th>
+              <th>订单管理</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderOrders()}
+          </tbody>
+        </table>
       </div>
     );
   }

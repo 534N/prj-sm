@@ -1,6 +1,7 @@
 Tasks = new Mongo.Collection('tasks');
 Orders = new Mongo.Collection('orders');
 Dishes = new Mongo.Collection('dishes');
+Settings = new Mongo.Collection('settings');
 
 if (Meteor.isClient) {
   // This code is executed on the client only
@@ -22,8 +23,30 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
 
 
-  Meteor.publish("orders", function () {
-    return Orders.find({});
+  Meteor.publish('orders', function(filter) {
+    var self = this,
+        ready = false;
+
+    var subHandle = Orders.find(filter || {}).observeChanges({
+      added: function (id, fields) {
+        if (!ready)
+          fields.existing = true;
+        self.added("orders", id, fields);
+      },
+      changed: function(id, fields) {
+        self.changed("orders", id, fields);
+      },
+      removed: function (id) {
+        self.removed("orders", id);
+      }
+    });
+
+    self.ready();
+    ready = true;
+
+    self.onStop(function () {
+      subHandle.stop();
+    });
   });
 
   Meteor.publish("dishes", function () {
