@@ -3,7 +3,8 @@ MyOrder = React.createClass({
   getInitialState() {
     console.debug('APP');
     return {
-      hideCompleted: false
+      hideCompleted: true,
+      current: 'incomplete'
     }
   },
 
@@ -12,22 +13,53 @@ MyOrder = React.createClass({
  
   // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
-    let query = {};
- 
+    let incompleteQuery = {};
+    let completedQuery = {}
+
+    const today = new Date(new Date().toLocaleDateString());
+    const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
     if (this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
-      query = {completed: {$ne: true}};
+      incompleteQuery = {
+        completed: {$ne: true},
+        createdAt: {
+          $gte: today,
+          $lt: tomorrow
+        }
+      };
+
+      completedQuery = {
+        completed: {$ne: false},
+        createdAt: {
+          $gte: today,
+          $lt: tomorrow
+        }
+      };
     }
  
     return {
-      orders: Orders.find(query, {sort: {createdAt: -1}}).fetch(),
-      incompleteCount: Orders.find({checked: {$ne: true}}).count(),
+      incompleteOrders: Orders.find(incompleteQuery, {sort: {createdAt: -1}}).fetch(),
+      completedOrders: Orders.find(completedQuery, {sort: {createdAt: -1}}).fetch(),
+      incompleteCount: Orders.find(incompleteQuery).count(),
+      completedCount: Orders.find(completedQuery).count(),
       currentUser: Meteor.user()
     };
   },
  
-  renderOrders() {
-    return this.data.orders.map((order) => {
+  renderIncompleteOrders() {
+    return this.data.incompleteOrders.map((order) => {
+      if (order.totalQuantity === 0) {
+        return;
+      }
+
+      return <Order
+        key={order._id}
+        order={order} />;
+    });
+  },
+
+  renderCompletedOrders() {
+    return this.data.completeOrders.map((order) => {
       if (order.totalQuantity === 0) {
         return;
       }
@@ -45,14 +77,25 @@ MyOrder = React.createClass({
   },
 
 
+
  
   render() {
+
+    const optionClassName = classNames(
+      'title',
+      {
+        'show-incomplete': this.state.current === 'incomplete',
+        'show-completed': this.state.current === 'completed'
+      }
+    );
+
     return (
       <div className='container' id='order-list'>
         <header>
-          <h1>未处理订单 ({this.data.incompleteCount})</h1>
-          <div>
-            <div className='button'></div>
+          <div className='date'>{moment().format('LLLL')}</div>
+          <div className={optionClassName}>
+            <div className='incomplete'>未处理订单 ({this.data.incompleteCount})</div>
+            <div className='completed'>已完成订单 ({this.data.completeCount})</div>
           </div>
         </header>
  
@@ -67,7 +110,14 @@ MyOrder = React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.renderOrders()}
+          {
+            this.state.current === 'incomplete' &&
+            this.renderIncompleteOrders()
+          }
+          {
+            this.state.current === 'completed' &&
+            this.renderCompletedOrders()
+          }
           </tbody>
         </table>
       </div>
