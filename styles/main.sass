@@ -9,6 +9,17 @@ body
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
   color: #555
 
+.title
+  @include flexbox
+  @include flex-direction(row)
+  margin: 1em 0
+  .tab
+    padding: 10px 
+    cursor: pointer
+    &.active
+      background: #0088cc
+      color: #fff
+
 #order-list
   margin: 0
   padding: 0
@@ -38,6 +49,15 @@ body
           .start
             display: none
           .progress
+            display: block !important
+          .done
+            display: none
+        &.completed
+          .start
+            display: none
+          .progress
+            display: none
+          .done
             display: block !important
         td 
           padding: 10px
@@ -72,6 +92,9 @@ body
             &.progress
               display: none
               background: #F6C674
+            &.done
+              display: none
+              background: #646464
             &.finish
 
 

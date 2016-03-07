@@ -6,6 +6,7 @@
 Order = React.createClass({
   getInitialState() {
     return {
+      new: !this.props.order.existing,
       processing: false,
     }
   },
@@ -14,9 +15,15 @@ Order = React.createClass({
     order: React.PropTypes.object.isRequired,
   },
  
-  toggleChecked() {
-    // Set the checked property to the opposite of its current value
-    Meteor.call('setChecked', this.props.order._id, ! this.props.order.checked);
+  componentDidMount() {
+    if (this.state.new) {
+      Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice);
+    }
+    // console.debug('componentWillUpdate');
+    // console.debug(this.props.order, !this.props.order.existing, !this.state.processing);
+    // if (!this.props.order.existing && !this.state.processing) {
+    //   
+    // }
   },
 
   _renderItem() {
@@ -41,8 +48,9 @@ Order = React.createClass({
       'order',
       {
         checked: this.props.order.checked,
-        new: !this.props.order.existing && !this.state.processing,
-        processing: this.state.processing
+        new: this.state.new,//!this.props.order.existing && !this.state.processing,
+        processing: this.state.processing,
+        completed: this.props.order.completed,
       }
     );
 
@@ -57,7 +65,7 @@ Order = React.createClass({
           </ul>
         </td>
         <td className='other price'>
-          $ { this.props.order.totalPrice }
+          $ { this.props.order.totalPrice.toFixed(2) }
         </td>
         <td className='other'>
           { this.props.order.pickup }
@@ -67,7 +75,11 @@ Order = React.createClass({
         </td>
         <td className='other'>
           <div className='button start' onClick={this._startProcessing}>开始处理</div>
-          <div className='button progress'>处理完毕</div>
+          <div className='button progress' onClick={this._finishProcessing}>处理完毕</div>
+          {
+            this.props.order.completed && 
+            <div className='done'>{moment(this.props.order.completedAt).format('LT')}</div>
+          }
         </td>
       </tr>
     );
@@ -76,6 +88,15 @@ Order = React.createClass({
   _startProcessing() {
     this.setState({
       processing: true,
+      new: false,
+    });
+  },
+
+  _finishProcessing() {
+    Meteor.call('completeOrder', this.props.order._id);
+    this.setState({
+      processing: false,
+      new: false,
     });
   }
 });

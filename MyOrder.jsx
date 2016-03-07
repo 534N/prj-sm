@@ -21,7 +21,7 @@ MyOrder = React.createClass({
     if (this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
       incompleteQuery = {
-        completed: {$ne: true},
+        completed: false,
         createdAt: {
           $gte: today,
           $lt: tomorrow
@@ -29,7 +29,7 @@ MyOrder = React.createClass({
       };
 
       completedQuery = {
-        completed: {$ne: false},
+        completed: true,
         createdAt: {
           $gte: today,
           $lt: tomorrow
@@ -59,7 +59,7 @@ MyOrder = React.createClass({
   },
 
   renderCompletedOrders() {
-    return this.data.completeOrders.map((order) => {
+    return this.data.completedOrders.map((order) => {
       if (order.totalQuantity === 0) {
         return;
       }
@@ -77,6 +77,11 @@ MyOrder = React.createClass({
   },
 
 
+  _setCurrent(status) {
+    this.setState({
+      current: status
+    });
+  },
 
  
   render() {
@@ -89,13 +94,27 @@ MyOrder = React.createClass({
       }
     );
 
+    const tabIncompleteClassName = classNames(
+      'tab',
+      {
+        active: this.state.current === 'incomplete',
+      }
+    );
+
+    const tabCompletedClassName = classNames(
+      'tab',
+      {
+        active: this.state.current === 'completed',
+      }
+    );
+
     return (
       <div className='container' id='order-list'>
         <header>
           <div className='date'>{moment().format('LLLL')}</div>
           <div className={optionClassName}>
-            <div className='incomplete'>未处理订单 ({this.data.incompleteCount})</div>
-            <div className='completed'>已完成订单 ({this.data.completeCount})</div>
+            <div className={tabIncompleteClassName} onClick={this._setCurrent.bind(this, 'incomplete')}>未处理订单 ({this.data.incompleteCount})</div>
+            <div className={tabCompletedClassName} onClick={this._setCurrent.bind(this, 'completed')}>已完成订单 ({this.data.completedCount})</div>
           </div>
         </header>
  

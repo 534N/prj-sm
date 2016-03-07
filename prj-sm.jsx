@@ -75,6 +75,25 @@ if (Meteor.isServer) {
   }, {
     url: "/publications/todos/:0"
   });
+
+  Meteor.methods({
+    sendSMS(phone, price) {
+      const accountSid = 'AC78613017db5b491563d248932c405ba6';
+      const authToken = 'e23740731e740dac8c1fb2b5b2645a90';
+
+      twilio = Twilio(accountSid, authToken); //this appears to be the issue
+
+      twilio.sendSms({
+        to:'+16132662918', 
+        from: '+16136931086', 
+        body: `您有新的订单: 电话: ${phone} 金额: $${price}`
+      }, function(err, responseData) { 
+        if (!err) { 
+          console.log(err)
+        }
+      });
+    }
+  })
 }
 
 Meteor.methods({
@@ -106,6 +125,11 @@ Meteor.methods({
     order.completed = false;
 
     Orders.insert(order);
+  },
+
+  completeOrder(orderID) {
+    const order = Orders.findOne(orderID);
+    Orders.update(orderID, { $set: { completed: true, completedAt: new Date()} });
   },
 
   // getOrders(owner) {
