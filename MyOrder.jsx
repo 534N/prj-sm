@@ -18,14 +18,15 @@ MyOrder = React.createClass({
 
     const today = new Date(new Date().toLocaleDateString());
     const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
-    if (this.state.hideCompleted) {
+    if (Meteor.user() && this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
       incompleteQuery = {
         completed: false,
         createdAt: {
           $gte: today,
           $lt: tomorrow
-        }
+        },
+        owner: Meteor.user().username
       };
 
       completedQuery = {
@@ -33,7 +34,8 @@ MyOrder = React.createClass({
         createdAt: {
           $gte: today,
           $lt: tomorrow
-        }
+        },
+        owner: Meteor.user().username
       };
     }
  
@@ -110,14 +112,18 @@ MyOrder = React.createClass({
 
     return (
       <div className='container' id='order-list'>
+      <AccountsUIWrapper />
+
+      { this.data.currentUser ?
         <header>
           <div className='date'>{moment().format('LLLL')}</div>
           <div className={optionClassName}>
             <div className={tabIncompleteClassName} onClick={this._setCurrent.bind(this, 'incomplete')}>未处理订单 ({this.data.incompleteCount})</div>
             <div className={tabCompletedClassName} onClick={this._setCurrent.bind(this, 'completed')}>已完成订单 ({this.data.completedCount})</div>
           </div>
-        </header>
- 
+        </header> : ''
+      }
+      { this.data.currentUser ?
         <table>
           <thead>
             <tr>
@@ -138,7 +144,9 @@ MyOrder = React.createClass({
             this.renderCompletedOrders()
           }
           </tbody>
-        </table>
+        </table> : ''
+      }
+
       </div>
     );
   }
