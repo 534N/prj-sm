@@ -123,6 +123,7 @@ MyOrder = React.createClass({
             <tr>
               <th>订单内容</th>
               <th>价格</th>
+              <th>取货日期</th>
               <th>取货时间</th>
               <th>备注</th>
               <th>订单管理</th>

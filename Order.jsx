@@ -68,7 +68,10 @@ Order = React.createClass({
           $ { this.props.order.totalPrice.toFixed(2) }
         </td>
         <td className='other'>
-          { this.props.order.pickup }
+          { this.props.order.pickupDay }
+        </td>
+        <td className='other'>
+          { this.props.order.pickupTime }
         </td>
         <td className='other'>
           { this.props.order.comment }
