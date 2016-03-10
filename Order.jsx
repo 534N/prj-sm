@@ -87,7 +87,7 @@ Order = React.createClass({
 
   _startProcessing() {
     Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice, true);
-    Meteor.call('setDispatched', this.props.order._id);
+    Meteor.call('setDispatched', this.props.order._id, true);
     this.setState({
       processing: true,
       new: false,
@@ -96,6 +96,7 @@ Order = React.createClass({
 
   _finishProcessing() {
     Meteor.call('completeOrder', this.props.order._id);
+    Meteor.call('setDispatched', this.props.order._id, false);
     this.setState({
       processing: false,
       new: false,

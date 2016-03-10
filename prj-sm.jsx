@@ -97,7 +97,7 @@ if (Meteor.isServer) {
       let body = '';
       if (customer) {
         to = '+1'+phone;
-        body = '您的订单正在处理';
+        body = '你好，我们已经开始处理您的订单!';
       } else {
         to = '+16132662918';
         body = '您有新的订单: 电话: ${phone} 金额: $${price}';
@@ -153,9 +153,9 @@ Meteor.methods({
     Orders.update(orderID, { $set: { completed: true, completedAt: new Date()} });
   },
 
-  setDispatched(orderID) {
+  setDispatched(orderID, value) {
     const order = Orders.findOne(orderID);
-    Orders.update(orderID, { $set: { dispatched: true} });
+    Orders.update(orderID, { $set: { dispatched: value} });
   },
 
   // getOrders(owner) {
