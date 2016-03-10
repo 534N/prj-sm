@@ -77,16 +77,37 @@ if (Meteor.isServer) {
   });
 
   Meteor.methods({
-    sendSMS(phone, price) {
+    sendSMS(phone, price, customer) {
       const accountSid = 'AC78613017db5b491563d248932c405ba6';
       const authToken = 'e23740731e740dac8c1fb2b5b2645a90';
 
       twilio = Twilio(accountSid, authToken); //this appears to be the issue
 
+      // twilio.sendSms({
+      //   to:'+16132662918', 
+      //   from: '+16136931086', 
+      //   body: `您有新的订单: 电话: ${phone} 金额: $${price}`
+      // }, function(err, responseData) { 
+      //   if (!err) { 
+      //     console.log(err)
+      //   }
+      // });
+
+      let to = '';
+      let body = '';
+      if (customer) {
+        to = '+1'+phone;
+        body = '您的订单正在处理';
+      } else {
+        to = '+16132662918';
+        body = '您有新的订单: 电话: ${phone} 金额: $${price}';
+      }
+      console.log(to);
+      console.log(body);
       twilio.sendSms({
-        to:'+16132662918', 
+        to:to, 
         from: '+16136931086', 
-        body: `您有新的订单: 电话: ${phone} 金额: $${price}`
+        body: body
       }, function(err, responseData) { 
         if (!err) { 
           console.log(err)
@@ -130,6 +151,11 @@ Meteor.methods({
   completeOrder(orderID) {
     const order = Orders.findOne(orderID);
     Orders.update(orderID, { $set: { completed: true, completedAt: new Date()} });
+  },
+
+  setDispatched(orderID) {
+    const order = Orders.findOne(orderID);
+    Orders.update(orderID, { $set: { dispatched: true} });
   },
 
   // getOrders(owner) {

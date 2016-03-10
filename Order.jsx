@@ -7,7 +7,7 @@ Order = React.createClass({
   getInitialState() {
     return {
       new: !this.props.order.existing,
-      processing: false,
+      processing: this.props.order.dispatched,
     }
   },
 
@@ -17,7 +17,7 @@ Order = React.createClass({
  
   componentDidMount() {
     if (this.state.new) {
-      Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice);
+      Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice, false);
     }
     // console.debug('componentWillUpdate');
     // console.debug(this.props.order, !this.props.order.existing, !this.state.processing);
@@ -86,6 +86,8 @@ Order = React.createClass({
   },
 
   _startProcessing() {
+    Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice, true);
+    Meteor.call('setDispatched', this.props.order._id);
     this.setState({
       processing: true,
       new: false,
