@@ -21,7 +21,10 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-
+  Meteor.startup(function () {
+    //declare email settings
+    process.env.MAIL_URL = 'smtp://panorigin.prjs%40gmail.com:Pan0rigin+@smtp.gmail.com:587/';
+  });
 
   Meteor.publish('orders', function(filter) {
     var self = this,
@@ -113,27 +116,26 @@ if (Meteor.isServer) {
           console.log(err)
         }
       });
+    },
+
+    sendEmail(to, from, subject, text) {
+      check([to, from, subject, text], [String]);
+
+      // Let other method calls from the same client start running,
+      // without waiting for the email sending to complete.
+      this.unblock();
+
+      Email.send({
+        to: to,
+        from: from,
+        subject: subject,
+        text: text
+      });
     }
-  })
+  });
 }
 
 Meteor.methods({
-
-  sendEmail(to, from, subject, text) {
-    check([to, from, subject, text], [String]);
-
-    // Let other method calls from the same client start running,
-    // without waiting for the email sending to complete.
-    this.unblock();
-
-    Email.send({
-      to: to,
-      from: from,
-      subject: subject,
-      text: text
-    });
-  },
-
   getDishes(owner) {
     const dishes = Dishes.find({owner: owner}).fetch();
     return dishes;
