@@ -2,6 +2,7 @@ Tasks = new Mongo.Collection('tasks');
 Orders = new Mongo.Collection('orders');
 Dishes = new Mongo.Collection('dishes');
 Settings = new Mongo.Collection('settings');
+Schedules = new Mongo.Collection('schedules');
 
 if (Meteor.isClient) {
   // This code is executed on the client only
@@ -83,16 +84,6 @@ if (Meteor.isServer) {
 
       twilio = Twilio(accountSid, authToken); //this appears to be the issue
 
-      // twilio.sendSms({
-      //   to:'+16132662918', 
-      //   from: '+16136931086', 
-      //   body: `您有新的订单: 电话: ${phone} 金额: $${price}`
-      // }, function(err, responseData) { 
-      //   if (!err) { 
-      //     console.log(err)
-      //   }
-      // });
-
       let to = '';
       let body = '';
       if (customer) {
@@ -100,10 +91,12 @@ if (Meteor.isServer) {
         body = '你好，我们已经开始处理您的订单!';
       } else {
         to = '+16132662918';
-        body = '您有新的订单: 电话: ${phone} 金额: $${price}';
+        // to = '+16133559972';
+        body = `您有新的订单: 电话: ${phone} 金额: $${price}`;
       }
       console.log(to);
       console.log(body);
+
       twilio.sendSms({
         to:to, 
         from: '+16136931086', 
@@ -137,6 +130,11 @@ Meteor.methods({
   getDishes(owner) {
     const dishes = Dishes.find({owner: owner}).fetch();
     return dishes;
+  },
+
+  getSchedule(owner) {
+    const schedules = Schedules.find({owner: owner}).fetch();
+    return schedules;
   },
 
   addOrder(order) {
