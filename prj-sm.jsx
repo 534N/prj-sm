@@ -1,7 +1,6 @@
 Tasks = new Mongo.Collection('tasks');
 Orders = new Mongo.Collection('orders');
 Dishes = new Mongo.Collection('dishes');
-Settings = new Mongo.Collection('settings');
 Schedules = new Mongo.Collection('schedules');
 
 if (Meteor.isClient) {
