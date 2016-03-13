@@ -9,14 +9,11 @@ Routes = React.createClass({
     return (
       <Router history={browserHistory}>
         <Route path='/' component={App}>
+          <Route path='signin' component={SignIn} />
           <IndexRoute component={Index}/>
-          <Route path='myorder' component={MyOrder}/>
-          <Route path='cpanel' component={CPanel}/>
-          {
-            // <Route path="/" component={HomePage} />
-            // <Route path="login" component={LoginPage} />
-            // <Route path="*" component={NotFoundPage} />
-          }
+          <Route path='myorder' component={Authenticator}>
+            <IndexRoute component={MyOrder} />
+          </Route>
         </Route>
       </Router>
     );

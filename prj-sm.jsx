@@ -2,6 +2,7 @@ Tasks = new Mongo.Collection('tasks');
 Orders = new Mongo.Collection('orders');
 Dishes = new Mongo.Collection('dishes');
 Schedules = new Mongo.Collection('schedules');
+Contacts = new Mongo.Collection('contacts');
 
 if (Meteor.isClient) {
   // This code is executed on the client only
@@ -14,6 +15,7 @@ if (Meteor.isClient) {
   Meteor.subscribe('tasks');
   Meteor.subscribe('orders');
   Meteor.subscribe('dishes');
+  Meteor.subscribe('contacts');
 
   Meteor.startup(function () {
     ReactDOM.render(<Routes />, document.getElementById('root'));
@@ -56,31 +58,33 @@ if (Meteor.isServer) {
     return Dishes.find({});
   });
 
-
+  Meteor.publish('contacts', function() {
+    return Contacts.find({});
+  })
 
   // 
   // 
   // 
   // Only publish tasks that are public or belong to the current user
-  Meteor.publish("tasks", function () {
-    return Tasks.find({
-      $or: [
-        { private: {$ne: true} },
-        { owner: this.userId }
-      ]
-    });
-  });
+  // Meteor.publish("tasks", function () {
+  //   return Tasks.find({
+  //     $or: [
+  //       { private: {$ne: true} },
+  //       { owner: this.userId }
+  //     ]
+  //   });
+  // });
 
-  Meteor.publish('todos', function(listId) {
-    // check(listId, String);
+  // Meteor.publish('todos', function(listId) {
+  //   // check(listId, String);
 
-    return Todos.find({listId: listId});
-  }, {
-    url: "/publications/todos/:0"
-  });
+  //   return Todos.find({listId: listId});
+  // }, {
+  //   url: "/publications/todos/:0"
+  // });
 
   Meteor.methods({
-    sendSMS(phone, price, customer) {
+    sendSMS(phone, price, customer, contacts) {
       const accountSid = 'AC78613017db5b491563d248932c405ba6';
       const authToken = 'e23740731e740dac8c1fb2b5b2645a90';
 
@@ -92,8 +96,7 @@ if (Meteor.isServer) {
         to = '+1'+phone;
         body = '你好，我们已经开始处理您的订单!';
       } else {
-        to = '+16132662918';
-        // to = '+16133559972';
+        to = contacts.phone;
         body = `您有新的订单: 电话: ${phone} 金额: $${price}`;
       }
       console.log(to);
@@ -131,6 +134,11 @@ Meteor.methods({
   getDishes(owner) {
     const dishes = Dishes.find({owner: owner}).fetch();
     return dishes;
+  },
+
+  getOwnerPhone(owner) {
+    const phone = Contacts.find({owner: owner}).fetch();
+    return phone;
   },
 
   getSchedule(owner) {

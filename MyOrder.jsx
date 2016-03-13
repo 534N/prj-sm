@@ -1,7 +1,6 @@
 // App component - represents the whole app
 MyOrder = React.createClass({
   getInitialState() {
-    console.debug('APP');
     return {
       hideCompleted: true,
       current: 'incomplete'
@@ -36,17 +35,33 @@ MyOrder = React.createClass({
         }
       };
     }
- 
-    return {
+
+    let data = {
       incompleteOrders: Orders.find(incompleteQuery, {sort: {createdAt: -1}}).fetch(),
       completedOrders: Orders.find(completedQuery, {sort: {createdAt: -1}}).fetch(),
       incompleteCount: Orders.find(incompleteQuery).count(),
-      completedCount: Orders.find(completedQuery).count(),
-      currentUser: Meteor.user()
+      completedCount: Orders.find(completedQuery).count()
     };
+
+    if (Meteor.user()) {
+      const { username } = Meteor.user();
+      data['contacts'] = Contacts.findOne({owner: username});
+      data['owner'] = Meteor.user();
+    }
+
+    // return {
+    //   incompleteOrders: Orders.find(incompleteQuery, {sort: {createdAt: -1}}).fetch(),
+    //   completedOrders: Orders.find(completedQuery, {sort: {createdAt: -1}}).fetch(),
+    //   incompleteCount: Orders.find(incompleteQuery).count(),
+    //   completedCount: Orders.find(completedQuery).count(),
+    //   contacts: Contacts.find({owner: userObj.username}).fetch(),
+    //   currentUser: Meteor.user()
+    // };
+    return data;
   },
  
   renderIncompleteOrders() {
+    console.debug('this.data', this.data)
     return this.data.incompleteOrders.map((order) => {
       if (order.totalQuantity === 0) {
         return;
@@ -54,7 +69,8 @@ MyOrder = React.createClass({
 
       return <Order
         key={order._id}
-        order={order} />;
+        order={order}
+        contacts={this.data.contacts} />;
     });
   },
 
@@ -66,7 +82,8 @@ MyOrder = React.createClass({
 
       return <Order
         key={order._id}
-        order={order} />;
+        order={order}
+        contacts={this.data.contacts} />;
     });
   },
 
