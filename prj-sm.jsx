@@ -60,7 +60,7 @@ if (Meteor.isServer) {
 
   Meteor.publish('contacts', function() {
     return Contacts.find({});
-  })
+  });
 
   // 
   // 
@@ -82,6 +82,22 @@ if (Meteor.isServer) {
   // }, {
   //   url: "/publications/todos/:0"
   // });
+
+  let initializing = true;
+  Orders.find().observeChanges({
+    added: function (id, fields) {
+      if (!initializing) {
+        let contact = Contacts.findOne({owner: fields.owner});
+        Meteor.call('sendSMS', fields.customer.phone, fields.totalPrice, false, contact);
+        Meteor.call('sendEmail',
+                  contact.email,
+                  'panorigin.prjs@gmail.com',
+                  '下单',
+                  '某某人已下单!');
+      }
+    }
+  });
+  initializing = false;
 
   Meteor.methods({
     sendSMS(phone, price, customer, contacts) {

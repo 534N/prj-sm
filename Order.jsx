@@ -15,16 +15,16 @@ Order = React.createClass({
     order: React.PropTypes.object.isRequired,
   },
  
-  componentDidMount() {
-    if (this.state.new) {
-      Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice, false, this.props.contacts);
-    }
-    // console.debug('componentWillUpdate');
-    // console.debug(this.props.order, !this.props.order.existing, !this.state.processing);
-    // if (!this.props.order.existing && !this.state.processing) {
-    //   
-    // }
-  },
+  // componentDidMount() {
+  //   if (this.state.new) {
+  //     Meteor.call('sendSMS', this.props.order.customer.phone, this.props.order.totalPrice, false, this.props.contacts);
+  //   }
+  //   // console.debug('componentWillUpdate');
+  //   // console.debug(this.props.order, !this.props.order.existing, !this.state.processing);
+  //   // if (!this.props.order.existing && !this.state.processing) {
+  //   //   
+  //   // }
+  // },
 
   _renderItem() {
     return (
