@@ -17,14 +17,15 @@ MyOrder = React.createClass({
 
     const today = new Date(new Date().toLocaleDateString());
     const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
-    if (this.state.hideCompleted) {
+    if (Meteor.user() && this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
       incompleteQuery = {
         completed: false,
         createdAt: {
           $gte: today,
           $lt: tomorrow
-        }
+        },
+        owner: Meteor.user().username
       };
 
       completedQuery = {
@@ -32,7 +33,8 @@ MyOrder = React.createClass({
         createdAt: {
           $gte: today,
           $lt: tomorrow
-        }
+        },
+        owner: Meteor.user().username
       };
     }
 
