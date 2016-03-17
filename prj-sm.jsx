@@ -16,6 +16,7 @@ if (Meteor.isClient) {
   Meteor.subscribe('orders');
   Meteor.subscribe('dishes');
   Meteor.subscribe('contacts');
+  Meteor.subscribe('schedules');
 
   Meteor.startup(function () {
     ReactDOM.render(<Routes />, document.getElementById('root'));
@@ -60,6 +61,10 @@ if (Meteor.isServer) {
 
   Meteor.publish('contacts', function() {
     return Contacts.find({});
+  });
+
+  Meteor.publish('schedules', function() {
+    return Schedules.find({});
   });
 
   // 
