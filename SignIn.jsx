@@ -47,6 +47,12 @@ SignIn = React.createClass({
     return (
       <div className='container'>
         <AccountsUIWrapper />
+          <div>
+            <a href='myorder'>Go to my order</a>
+          </div>
+          <div>
+            <a href='myprofile'>Go to my profile</a>
+          </div>
       </div>
     );
   }
