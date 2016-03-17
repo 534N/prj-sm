@@ -157,9 +157,9 @@ Meteor.methods({
     return dishes;
   },
 
-  getOwnerPhone(owner) {
-    const phone = Contacts.find({owner: owner}).fetch();
-    return phone;
+  getContacts(owner) {
+    const contacts = Contacts.find({owner: owner}).fetch();
+    return contacts;
   },
 
   getSchedule(owner) {
