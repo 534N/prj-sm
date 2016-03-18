@@ -3,6 +3,18 @@ MyProfileSchedule = React.createClass({
 		schedule: React.PropTypes.object.isRequired
 	},
 
+	getScheduleID() {
+		return this.props.schedule._id;
+	},
+
+	getSchedule() {
+		let schedules = [];
+		for (var i = 0; i < this.props.schedule.schedule.length; i++) {
+			schedules.push(ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim());
+		}
+  	return schedules;
+  },
+
 	_renderSchedule() {
 		return (
 			Object.keys(this.props.schedule.schedule).map(key => {
@@ -12,16 +24,15 @@ MyProfileSchedule = React.createClass({
 				}
 
 				return (
-					<li key={key}> {item} </li>
+					<li key={key}> 
+						<input
+							type="text"
+							ref={"schedule"+key}
+							defaultValue={item} />
+					</li>
 				)
 			})
 		);
-
-		// return (
-		// 	this.props.schedule.schedule.map((item) => {
-		// 		return (<li> {item} </li>);
-		// 	})
-		// );
 	},
 
 	render() {
@@ -30,26 +41,5 @@ MyProfileSchedule = React.createClass({
 				{this._renderSchedule()}
 			</ul>
 		);
-
-		// return (
-		// 	<div className="container">
-		// 		<header>
-		// 			<h1>{Meteor.user().username}'s Profile</h1>
-		// 		</header>
-
-		// 		<div>
-		// 			<h2>Contacts Information</h2>
-		// 			{this._renderContacts()}
-		// 		</div>
-
-		// 		<div>
-		// 			<h2>Dishes Information</h2>
-		// 		</div>
-
-		// 		<div>
-		// 			<h2>Schedules Information</h2>
-		// 		</div>
-		// 	</div>
-		// );
 	}
 });

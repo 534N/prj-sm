@@ -248,5 +248,21 @@ Meteor.methods({
     }
  
     Tasks.update(taskId, { $set: { private: setToPrivate } });
+  },
+
+  setProfileInfo(contactID, contact, dish, scheduleID, schedule) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Contacts.update(contactID, {$set: contact});
+
+    for (var dishID in dish) {
+      console.log(dishID);
+      console.log(dish[dishID]);
+      Dishes.update(dishID, {$set: dish[dishID]});
+    }
+
+    // Schedules.update(scheduleID, {$set: schedule});
   }
 });

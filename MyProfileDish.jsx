@@ -3,13 +3,53 @@ MyProfileDish = React.createClass({
 		dish: React.PropTypes.object.isRequired
 	},
 
+	getDishID() {
+		return this.props.dish._id;
+	},
+
+	getDishName() {
+		return ReactDOM.findDOMNode(this.refs.dishName).value.trim();
+	},
+
+	getDishPrice() {
+		return ReactDOM.findDOMNode(this.refs.dishPrice).value.trim();
+	},
+
+	getDishUnit() {
+		return ReactDOM.findDOMNode(this.refs.dishUnit).value.trim();
+	},
+
+	getDishNote() {
+		return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
+	},
+
 	render() {
 		return (
 			<ul>
-				<li>Name: {this.props.dish.name}</li>
-				<li>Price: {this.props.dish.price}</li>
-				<li>Unit: {this.props.dish.unit}</li>
-				<li>Note: {this.props.dish.note}</li>
+				<li>Name: 
+					<input
+						type="text"
+						ref="dishName"
+						defaultValue={this.props.dish.name} />
+				</li>
+				<li>Price: 
+					<input
+						type="text"
+						ref="dishPrice"
+						defaultValue={this.props.dish.price} />
+				</li>
+				<li>Unit: 
+					<input
+						type="text"
+						ref="dishUnit"
+						defaultValue={this.props.dish.unit} />
+				</li>
+				<li>Note: 
+					<input
+						type="text"
+						ref="dishNote"
+						defaultValue={this.props.dish.note} />
+				</li>
 			</ul>
 		);
 	}
