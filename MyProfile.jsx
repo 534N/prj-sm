@@ -61,42 +61,36 @@ MyProfile = React.createClass({
 		let phone = this.refs.myProfileContact.getPhone();
 		let email = this.refs.myProfileContact.getEmail();
 
-		// console.log(address);
-		// console.log(phone);
-		// console.log(email);
-		// let contact = [];
-		// contact[contactID] = {address: address, phone: phone, email: email};
 		let contact = {address: address, phone: phone, email: email};
-		console.log(contact);
+		// console.log(contactID);
+		// console.log(contact);
 
 		//get every dish info via this.refs
-		let dish = {};
-		for (let i = 0;i < this.data.dishCount; i++) {
+		let dish = [];
+		let dishIDs = [];
+		for (let i = 0; i < this.data.dishCount; i++) {
 			let dishID = this.refs['myProfileDish'+i].getDishID();
 			let dishName = this.refs['myProfileDish'+i].getDishName();
 			let dishPrice = this.refs['myProfileDish'+i].getDishPrice();
 			let dishUnit = this.refs['myProfileDish'+i].getDishUnit();
 			let dishNote = this.refs['myProfileDish'+i].getDishNote();
-			// console.log(dishName);
-			// console.log(dishPrice);
-			// console.log(dishUnit);
-			// console.log(dishNote);
-			// dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote});
-			dish[dishID] = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote};
+			
+			// console.log(dishID);
+			dishIDs.push(dishID);
+			dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote});
 		}
-		console.log(dish);
+		// console.log(dishIDs);
+		// console.log(dish);
 
 		//get the schedule via this.refs
 		let scheduleID = this.refs.myProfileSchedule.getScheduleID()
 		let schedule = this.refs.myProfileSchedule.getSchedule();
+		// console.log(scheduleID);
 		// console.log(schedule);
-		// let schedule = {};
-		// schedule[scheduleID] = s;
-		console.log(schedule);
 
 
 		// console.log(text);
-		Meteor.call('setProfileInfo', contactID, contact, dish, scheduleID, schedule);
+		Meteor.call('setProfileInfo', contactID, contact, dishIDs, dish, scheduleID, schedule);
 	},
 
 	render() {
@@ -125,11 +119,5 @@ MyProfile = React.createClass({
 				</form>
 			</div>
 		);
-
-		// return (
-		// 	<MyProfileSchedule
-		// 		contact={this.data.contacts}
-		// 		dish={this.data.dishes} />
-		// );
 	}
 });

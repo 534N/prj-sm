@@ -4,7 +4,7 @@ MyProfileContact = React.createClass({
 	},
 
 	getContactID() {
-		return this.props.contact._id
+		return this.props.contact._id;
 	},
 
   getAddress() {

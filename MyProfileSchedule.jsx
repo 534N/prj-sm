@@ -10,7 +10,10 @@ MyProfileSchedule = React.createClass({
 	getSchedule() {
 		let schedules = [];
 		for (var i = 0; i < this.props.schedule.schedule.length; i++) {
-			schedules.push(ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim());
+			let value = ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim();
+			if (value) {
+				schedules.push(ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim());
+			}
 		}
   	return schedules;
   },

@@ -250,19 +250,20 @@ Meteor.methods({
     Tasks.update(taskId, { $set: { private: setToPrivate } });
   },
 
-  setProfileInfo(contactID, contact, dish, scheduleID, schedule) {
+  setProfileInfo(contactID, contact, dishIDs, dish, scheduleID, schedule) {
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
-
+    
+    //update the Contacts collection record
     Contacts.update(contactID, {$set: contact});
 
-    for (var dishID in dish) {
-      console.log(dishID);
-      console.log(dish[dishID]);
-      Dishes.update(dishID, {$set: dish[dishID]});
-    }
+    //update the Dished collection records
+    dishIDs.forEach((dishID, index) => {
+      Dishes.update(dishID, {$set: dish[index]});
+    });
 
-    // Schedules.update(scheduleID, {$set: schedule});
+    //update the Schedules collection records
+    Schedules.update(scheduleID, {$set: {schedule: schedule}});
   }
 });
