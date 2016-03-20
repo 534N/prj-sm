@@ -23,6 +23,11 @@ MyProfileDish = React.createClass({
 		return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
 	},
 
+	handleDeleteDish(e) {
+		e.preventDefault();
+		Meteor.call('deleteDish', this.props.dish._id);
+	},
+
 	render() {
 		return (
 			<ul>
@@ -50,6 +55,7 @@ MyProfileDish = React.createClass({
 						ref="dishNote"
 						defaultValue={this.props.dish.note} />
 				</li>
+				<button onClick={this.handleDeleteDish}>Delete this dish</button>
 			</ul>
 		);
 	}

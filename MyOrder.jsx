@@ -17,6 +17,8 @@ MyOrder = React.createClass({
 
     const today = new Date(new Date().toLocaleDateString());
     const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
+    console.log(today);
+    console.log(tomorrow);
     if (Meteor.user() && this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
       incompleteQuery = {
@@ -135,6 +137,7 @@ MyOrder = React.createClass({
             <div className={tabIncompleteClassName} onClick={this._setCurrent.bind(this, 'incomplete')}>未处理订单 ({this.data.incompleteCount})</div>
             <div className={tabCompletedClassName} onClick={this._setCurrent.bind(this, 'completed')}>已完成订单 ({this.data.completedCount})</div>
           </div>
+          <div>Total Orders Today: {this.data.incompleteCount+this.data.completedCount}</div>
         </header>
  
         <table>

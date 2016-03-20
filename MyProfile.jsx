@@ -13,7 +13,8 @@ MyProfile = React.createClass({
 			contacts: Contacts.find(query).fetch(),
 			dishes: Dishes.find(query).fetch(),
 			dishCount: Dishes.find(query).count(),
-			schedules: Schedules.find(query).fetch()
+			schedules: Schedules.find(query).fetch(),
+			currentUser: Meteor.user()
 		};
 	},
 
@@ -93,6 +94,37 @@ MyProfile = React.createClass({
 		Meteor.call('setProfileInfo', contactID, contact, dishIDs, dish, scheduleID, schedule);
 	},
 
+	handleAddDish(e) {
+		e.preventDefault();
+
+		let dishName = ReactDOM.findDOMNode(this.refs.newDishName).value.trim();
+		let dishPrice = ReactDOM.findDOMNode(this.refs.newDishPrice).value.trim();
+		let dishUnit = ReactDOM.findDOMNode(this.refs.newDishUnit).value.trim();
+		let dishNote = ReactDOM.findDOMNode(this.refs.newDishNote).value.trim();
+		let dishOwner = this.data.currentUser.username;
+		// console.log(dishName);
+		// console.log(dishPrice);
+		// console.log(dishUnit);
+		// console.log(dishNote);
+		let dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, owner: dishOwner};
+		Meteor.call('addDish', dish);
+
+		ReactDOM.findDOMNode(this.refs.newDishName).value = "";
+		ReactDOM.findDOMNode(this.refs.newDishPrice).value = "";
+		ReactDOM.findDOMNode(this.refs.newDishUnit).value = "";
+		ReactDOM.findDOMNode(this.refs.newDishNote).value = "";
+	},
+
+	handleAddSchedule(e) {
+		e.preventDefault();
+
+		let schedule = ReactDOM.findDOMNode(this.refs.newSchedule).value.trim();
+		let scheduleOwner = this.data.currentUser.username;
+		Meteor.call('addSchedule', schedule, scheduleOwner);
+
+		ReactDOM.findDOMNode(this.refs.newSchedule).value = "";
+	},
+
 	render() {
 		return (
 			<div className="container">
@@ -108,14 +140,40 @@ MyProfile = React.createClass({
 
 					<div>
 						<h2>Dishes Information</h2>
+						<div>
+							Dish Name: <input 
+								type="text"
+								ref="newDishName"
+								placeholder="Dish Name" />
+							$: <input 
+								type="text"
+								ref="newDishPrice"
+								placeholder="Dish Price" />
+							Unit: <input 
+								type="text"
+								ref="newDishUnit"
+								placeholder="Dish Unit" />
+							Note: <input 
+								type="text"
+								ref="newDishNote"
+								placeholder="Dish Note" />
+							<button type="button" onClick={this.handleAddDish}>Add Dish</button>
+						</div>
 						{this.renderDishes()}
 					</div>
 
 					<div>
 						<h2>Schedules Information</h2>
+						<div>
+							Schedule: <input 
+								type="text"
+								ref="newSchedule"
+								placeholder="New Schedule Time" />
+							<button type="button" onClick={this.handleAddSchedule}>Add Schedule</button>
+						</div>
 						{this.renderSchedules()}
 					</div>
-					<button type="button" onClick={this.handleSubmit}>Submit</button>
+					<button type="button" onClick={this.handleSubmit}>Save Change</button>
 				</form>
 			</div>
 		);

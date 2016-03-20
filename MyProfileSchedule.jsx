@@ -18,6 +18,13 @@ MyProfileSchedule = React.createClass({
   	return schedules;
   },
 
+  handleDeleteSchedule(e) {
+  	e.preventDefault();
+  	// console.log($(e.target).prev().prop('defaultValue'));
+  	let schedule = $(e.target).prev().prop('defaultValue');
+  	Meteor.call('deleteSchedule', schedule, this.props.schedule.owner);
+  },
+
 	_renderSchedule() {
 		return (
 			Object.keys(this.props.schedule.schedule).map(key => {
@@ -32,6 +39,9 @@ MyProfileSchedule = React.createClass({
 							type="text"
 							ref={"schedule"+key}
 							defaultValue={item} />
+						<button onClick={this.handleDeleteSchedule}>
+		          &times;
+		        </button>
 					</li>
 				)
 			})
