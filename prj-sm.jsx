@@ -167,7 +167,7 @@ Meteor.methods({
     return schedules;
   },
 
-  getOrderCount(owner, from, to) {
+  getPeriodOrderCount(owner, from, to) {
     const today = new Date(from.toLocaleDateString());
     const startOfTo = new Date(to.toLocaleDateString());
     const tomorrowOfTO = new Date(startOfTo.getTime() + 60 * 60 * 24 * 1000);
@@ -186,13 +186,18 @@ Meteor.methods({
     return orderCount;
   },
 
+  getOrderCount(owner) {
+    const orderCount = Orders.find({owner: owner}).count();
+    return orderCount;
+  },
+
   addOrder(order) {
     order.createdAt = new Date();
     order.received = true;
     order.dispatched = false;
     order.completed = false;
 
-    Meteor.call('getOrderCount', order.owner, order.createdAt, order.createdAt, (error, result) => {
+    Meteor.call('getOrderCount', order.owner, (error, result) => {
       // console.log(result);
       order.orderNumber = result + 1;
       Orders.insert(order);
