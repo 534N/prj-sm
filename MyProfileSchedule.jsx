@@ -1,55 +1,58 @@
 MyProfileSchedule = React.createClass({
-	propTypes: {
-		schedule: React.PropTypes.object.isRequired
-	},
+  propTypes: {
+    schedule: React.PropTypes.object.isRequired
+  },
 
-	_renderSchedule() {
-		return (
-			Object.keys(this.props.schedule.schedule).map(key => {
-				const item = this.props.schedule.schedule[key];
-				if (!item) {
-					return;
-				}
+  getScheduleID() {
+    return this.props.schedule._id;
+  },
 
-				return (
-					<li key={key}> {item} </li>
-				)
-			})
-		);
+  getSchedule() {
+    let schedules = [];
+    for (var i = 0; i < this.props.schedule.schedule.length; i++) {
+      let value = ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim();
+      if (value) {
+        schedules.push(ReactDOM.findDOMNode(this.refs["schedule"+i]).value.trim());
+      }
+    }
+    return schedules;
+  },
 
-		// return (
-		// 	this.props.schedule.schedule.map((item) => {
-		// 		return (<li> {item} </li>);
-		// 	})
-		// );
-	},
+  handleDeleteSchedule(e) {
+    e.preventDefault();
+    // console.log($(e.target).prev().prop('defaultValue'));
+    let schedule = $(e.target).prev().prop('defaultValue');
+    Meteor.call('deleteSchedule', schedule, this.props.schedule.owner);
+  },
 
-	render() {
-		return (
-			<ul>
-				{this._renderSchedule()}
-			</ul>
-		);
+  _renderSchedule() {
+    return (
+      Object.keys(this.props.schedule.schedule).map(key => {
+        const item = this.props.schedule.schedule[key];
+        if (!item) {
+          return;
+        }
 
-		// return (
-		// 	<div className="container">
-		// 		<header>
-		// 			<h1>{Meteor.user().username}'s Profile</h1>
-		// 		</header>
+        return (
+          <li key={key}> 
+            <input
+              type="text"
+              ref={"schedule"+key}
+              defaultValue={item} />
+            <button onClick={this.handleDeleteSchedule}>
+              &times;
+            </button>
+          </li>
+        )
+      })
+    );
+  },
 
-		// 		<div>
-		// 			<h2>Contacts Information</h2>
-		// 			{this._renderContacts()}
-		// 		</div>
-
-		// 		<div>
-		// 			<h2>Dishes Information</h2>
-		// 		</div>
-
-		// 		<div>
-		// 			<h2>Schedules Information</h2>
-		// 		</div>
-		// 	</div>
-		// );
-	}
+  render() {
+    return (
+      <ul>
+        {this._renderSchedule()}
+      </ul>
+    );
+  }
 });

@@ -167,13 +167,41 @@ Meteor.methods({
     return schedules;
   },
 
+  getPeriodOrderCount(owner, from, to) {
+    const today = new Date(from.toLocaleDateString());
+    const startOfTo = new Date(to.toLocaleDateString());
+    const tomorrowOfTO = new Date(startOfTo.getTime() + 60 * 60 * 24 * 1000);
+
+    // console.log(today);
+    // console.log(startOfTo);
+    // console.log(tomorrowOfTO);
+    const orderCount = Orders.find({
+      createdAt: {
+        $gte: today,
+        $lt: tomorrowOfTO
+      },
+      owner: owner
+    }).count();
+    // console.log(orderCount);
+    return orderCount;
+  },
+
+  getOrderCount(owner) {
+    const orderCount = Orders.find({owner: owner}).count();
+    return orderCount;
+  },
+
   addOrder(order) {
     order.createdAt = new Date();
     order.received = true;
     order.dispatched = false;
     order.completed = false;
 
-    Orders.insert(order);
+    Meteor.call('getOrderCount', order.owner, (error, result) => {
+      // console.log(result);
+      order.orderNumber = result + 1;
+      Orders.insert(order);
+    });
   },
 
   completeOrder(orderID) {
@@ -184,6 +212,49 @@ Meteor.methods({
   setDispatched(orderID, value) {
     const order = Orders.findOne(orderID);
     Orders.update(orderID, { $set: { dispatched: value} });
+  },
+
+  addDish(dish) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Dishes.insert(dish);
+  },
+
+  deleteDish(dishID) {
+    const dish = Dishes.findOne(dishID);
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Dishes.remove(dishID);
+  },
+
+  addSchedule(schedule, owner) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    let ownerSchedule = Schedules.findOne({owner: owner});
+
+    if (ownerSchedule) {
+      Schedules.update({owner: owner}, {$addToSet: {schedule: schedule}});
+    } else {
+      let item = {};
+      item.owner = owner;
+      item.schedule = [schedule];
+      
+      Schedules.insert(item);
+    }
+  },
+
+  deleteSchedule(schedule, owner) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Schedules.update({owner: owner}, {$pull: {schedule: schedule}});
   },
 
   // getOrders(owner) {
@@ -248,5 +319,22 @@ Meteor.methods({
     }
  
     Tasks.update(taskId, { $set: { private: setToPrivate } });
+  },
+
+  setProfileInfo(contactID, contact, dishIDs, dish, scheduleID, schedule) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+    
+    //update the Contacts collection record
+    Contacts.update(contactID, {$set: contact});
+
+    //update the Dished collection records
+    dishIDs.forEach((dishID, index) => {
+      Dishes.update(dishID, {$set: dish[index]});
+    });
+
+    //update the Schedules collection records
+    Schedules.update(scheduleID, {$set: {schedule: schedule}});
   }
 });
