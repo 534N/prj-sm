@@ -53,6 +53,9 @@ SignIn = React.createClass({
           <div>
             <a href='myprofile'>Go to my profile</a>
           </div>
+          <div>
+            <a href='orderHistory'>Go to order history</a>
+          </div>
       </div>
     );
   }

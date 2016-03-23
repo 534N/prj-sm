@@ -57,12 +57,12 @@ MyProfile = React.createClass({
     e.preventDefault();
 
     //get contacts info via this.refs
-    let contactID = this.refs.myProfileContact.getContactID();
-    let address = this.refs.myProfileContact.getAddress();
-    let phone = this.refs.myProfileContact.getPhone();
-    let email = this.refs.myProfileContact.getEmail();
+    const contactID = this.refs.myProfileContact.getContactID();
+    const address = this.refs.myProfileContact.getAddress();
+    const phone = this.refs.myProfileContact.getPhone();
+    const email = this.refs.myProfileContact.getEmail();
 
-    let contact = {address: address, phone: phone, email: email};
+    const contact = {address: address, phone: phone, email: email};
     // console.log(contactID);
     // console.log(contact);
 
@@ -84,8 +84,8 @@ MyProfile = React.createClass({
     // console.log(dish);
 
     //get the schedule via this.refs
-    let scheduleID = this.refs.myProfileSchedule.getScheduleID()
-    let schedule = this.refs.myProfileSchedule.getSchedule();
+    const scheduleID = this.refs.myProfileSchedule.getScheduleID()
+    const schedule = this.refs.myProfileSchedule.getSchedule();
     // console.log(scheduleID);
     // console.log(schedule);
 
@@ -97,16 +97,16 @@ MyProfile = React.createClass({
   handleAddDish(e) {
     e.preventDefault();
 
-    let dishName = ReactDOM.findDOMNode(this.refs.newDishName).value.trim();
-    let dishPrice = parseFloat(ReactDOM.findDOMNode(this.refs.newDishPrice).value.trim());
-    let dishUnit = ReactDOM.findDOMNode(this.refs.newDishUnit).value.trim();
-    let dishNote = ReactDOM.findDOMNode(this.refs.newDishNote).value.trim();
-    let dishOwner = this.data.currentUser.username;
+    const dishName = ReactDOM.findDOMNode(this.refs.newDishName).value.trim();
+    const dishPrice = parseFloat(ReactDOM.findDOMNode(this.refs.newDishPrice).value.trim());
+    const dishUnit = ReactDOM.findDOMNode(this.refs.newDishUnit).value.trim();
+    const dishNote = ReactDOM.findDOMNode(this.refs.newDishNote).value.trim();
+    const dishOwner = this.data.currentUser.username;
     // console.log(dishName);
     // console.log(dishPrice);
     // console.log(dishUnit);
     // console.log(dishNote);
-    let dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, owner: dishOwner};
+    const dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, owner: dishOwner};
     Meteor.call('addDish', dish);
 
     ReactDOM.findDOMNode(this.refs.newDishName).value = "";
