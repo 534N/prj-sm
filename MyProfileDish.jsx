@@ -23,6 +23,14 @@ MyProfileDish = React.createClass({
     return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
   },
 
+  setDishDefaultName() {
+    ReactDOM.findDOMNode(this.refs.dishName).value = ReactDOM.findDOMNode(this.refs.dishName).defaultValue;
+  },
+
+  setDishDefaultPrice() {
+    ReactDOM.findDOMNode(this.refs.dishPrice).value = ReactDOM.findDOMNode(this.refs.dishPrice).defaultValue;
+  },
+
   handleDeleteDish(e) {
     e.preventDefault();
     Meteor.call('deleteDish', this.props.dish._id);

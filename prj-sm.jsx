@@ -114,7 +114,11 @@ if (Meteor.isServer) {
       let to = '';
       let body = '';
       if (customer) {
-        to = '+1'+phone;
+        if (phone.match(/^\+86/)) {
+          to = phone;
+        } else {
+          to = '+1'+phone;
+        }
         body = '你好，我们已经开始处理您的订单!';
       } else {
         to = contacts.phone;

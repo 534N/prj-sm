@@ -77,8 +77,15 @@ MyProfile = React.createClass({
       let dishNote = this.refs['myProfileDish'+i].getDishNote();
       
       // console.log(dishID);
-      dishIDs.push(dishID);
-      dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote});
+      //if dish name and price are not empty, then update
+      if (dishName && dishPrice) {
+        dishIDs.push(dishID);
+        dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote});
+      } else {
+        //if dish name and price are both empty, reset to default value
+        this.refs['myProfileDish'+i].setDishDefaultName();
+        this.refs['myProfileDish'+i].setDishDefaultPrice();
+      }
     }
     // console.log(dishIDs);
     // console.log(dish);
@@ -107,7 +114,11 @@ MyProfile = React.createClass({
     // console.log(dishUnit);
     // console.log(dishNote);
     const dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, owner: dishOwner};
-    Meteor.call('addDish', dish);
+
+    //if both dish name and price are there, then insert
+    if (dishName && dishPrice) {
+      Meteor.call('addDish', dish);
+    }
 
     ReactDOM.findDOMNode(this.refs.newDishName).value = "";
     ReactDOM.findDOMNode(this.refs.newDishPrice).value = "";
@@ -120,7 +131,11 @@ MyProfile = React.createClass({
 
     let schedule = ReactDOM.findDOMNode(this.refs.newSchedule).value.trim();
     let scheduleOwner = this.data.currentUser.username;
-    Meteor.call('addSchedule', schedule, scheduleOwner);
+
+    //if schedule is there, then insert
+    if (schedule) {
+      Meteor.call('addSchedule', schedule, scheduleOwner);
+    }
 
     ReactDOM.findDOMNode(this.refs.newSchedule).value = "";
   },
