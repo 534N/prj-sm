@@ -7,7 +7,7 @@ App = React.createClass({
 
   render() {
     return (
-      <div>
+      <div className='wrap'>
         {this.props.children}
       </div>
     );

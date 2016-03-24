@@ -10,6 +10,7 @@ Routes = React.createClass({
       <Router history={browserHistory}>
         <Route path='/' component={App}>
           <Route path='signin' component={SignIn} />
+          <Route path='register' component={Register} />
           <IndexRoute component={Index}/>
           <Route path='myorder' component={Authenticator}>
             <IndexRoute component={MyOrder} />
