@@ -33,8 +33,8 @@ MyOrder = React.createClass({
       completedQuery = {
         completed: true,
         createdAt: {
-          $gte: today.toISOString(),
-          $lt: tomorrow.toISOString()
+          $gte: new Date(today.toISOString()),
+          $lt: new Date(tomorrow.toISOString())
         },
         owner: Meteor.user().username
       };
