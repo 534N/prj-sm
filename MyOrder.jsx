@@ -38,6 +38,9 @@ MyOrder = React.createClass({
         },
         owner: Meteor.user().username
       };
+
+      console.debug('incompleteQuery', incompleteQuery);
+      console.debug('completedQuery', completedQuery);
     }
 
     let data = {
@@ -46,6 +49,8 @@ MyOrder = React.createClass({
       incompleteCount: Orders.find(incompleteQuery).count(),
       completedCount: Orders.find(completedQuery).count()
     };
+
+    console.debug('data', data);
 
     if (Meteor.user()) {
       const { username } = Meteor.user();
