@@ -15,8 +15,8 @@ MyOrder = React.createClass({
     let incompleteQuery = {};
     let completedQuery = {}
 
-    const today = new Date(new Date(new Date().toLocaleDateString()).toISOString());
-    const tomorrow = new Date(new Date(today.getTime() + 60 * 60 * 24 * 1000).toISOString());
+    const today = new Date(new Date().toLocaleDateString());
+    const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
     console.log(today);
     console.log(tomorrow);
     if (Meteor.user() && this.state.hideCompleted) {
@@ -24,8 +24,8 @@ MyOrder = React.createClass({
       incompleteQuery = {
         completed: false,
         createdAt: {
-          $gte: today,
-          $lt: tomorrow
+          $gte: today.toISOString(),
+          $lt: tomorrow.toISOString()
         },
         owner: Meteor.user().username
       };
@@ -33,8 +33,8 @@ MyOrder = React.createClass({
       completedQuery = {
         completed: true,
         createdAt: {
-          $gte: today,
-          $lt: tomorrow
+          $gte: today.toISOString(),
+          $lt: tomorrow.toISOString()
         },
         owner: Meteor.user().username
       };
