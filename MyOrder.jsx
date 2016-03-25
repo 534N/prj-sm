@@ -24,8 +24,8 @@ MyOrder = React.createClass({
       incompleteQuery = {
         completed: false,
         createdAt: {
-          $gte: today.toISOString(),
-          $lt: tomorrow.toISOString()
+          $gte: new Date(today.toISOString()),
+          $lt: new Date(tomorrow.toISOString())
         },
         owner: Meteor.user().username
       };
