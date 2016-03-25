@@ -15,8 +15,8 @@ MyOrder = React.createClass({
     let incompleteQuery = {};
     let completedQuery = {}
 
-    const today = new Date(new Date().toLocaleDateString());
-    const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
+    const today = new Date(new Date(new Date().toLocaleDateString()).toISOString());
+    const tomorrow = new Date(new Date(today.getTime() + 60 * 60 * 24 * 1000).toISOString());
     console.log(today);
     console.log(tomorrow);
     if (Meteor.user() && this.state.hideCompleted) {
