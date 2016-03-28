@@ -1,4 +1,4 @@
-// App component - represents the whole app
+const {Router, Route, IndexRoute, browserHistory} = ReactRouter;
 
 SignIn = React.createClass({
   getInitialState() {
@@ -8,8 +8,13 @@ SignIn = React.createClass({
   },
 
   componentDidMount() {
+    if (Meteor.user()) {
+      browserHistory.push('/myorder');
+    }
+
     const username = React.findDOMNode(this.refs.username);
     username.focus();
+
   },
 
   render() {
@@ -69,7 +74,7 @@ SignIn = React.createClass({
 
 
     Meteor.loginWithPassword(username.value, password.value, (res) => {
-      if (res.error) {
+      if (res && res.error) {
         let warning = '';
         switch (res.reason) {
           case 'User not found': 
@@ -88,6 +93,8 @@ SignIn = React.createClass({
         this.setState({
           warning: warning
         });
+      } else {
+        browserHistory.push('/myorder');
       }
     });
   },

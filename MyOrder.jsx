@@ -15,8 +15,11 @@ MyOrder = React.createClass({
     let incompleteQuery = {};
     let completedQuery = {}
 
-    const today = new Date(new Date().toLocaleDateString());
-    const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
+    // const today = new Date(new Date().toLocaleDateString());
+    // const tomorrow = new Date(today.getTime() + 60 * 60 * 24 * 1000);
+
+    const today = new VDDate(new Date()).beginningOfDay();
+    const tomorrow = new VDDate(new Date()).tomorrow();
     console.log(today);
     console.log(tomorrow);
     if (Meteor.user() && this.state.hideCompleted) {
@@ -132,6 +135,7 @@ MyOrder = React.createClass({
     return (
       <div className='container' id='order-list'>
         <header>
+          <AccountsUIWrapper />
           <div className='date'>{moment().format('LLLL')}</div>
           <div className={optionClassName}>
             <div className={tabIncompleteClassName} onClick={this._setCurrent.bind(this, 'incomplete')}>未处理订单 ({this.data.incompleteCount})</div>

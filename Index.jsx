@@ -5,7 +5,7 @@ Index = React.createClass({
   render: function() {
     return (
       <div id='main'>
-        
+        asdfasd
       </div>
     );
   }
