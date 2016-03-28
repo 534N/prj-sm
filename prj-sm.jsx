@@ -94,11 +94,12 @@ if (Meteor.isServer) {
       if (!initializing) {
         let contact = Contacts.findOne({owner: fields.owner});
         Meteor.call('sendSMS', fields.customer.phone, fields.totalPrice, false, contact);
+        const myOrder = Meteor.absoluteUrl() + 'myorder';
         Meteor.call('sendEmail',
                   contact.email,
                   'panorigin.prjs@gmail.com',
                   '下单',
-                  '某某人已下单!');
+                  '<p>某某人已下单! <a href="'+myOrder+'">去订单页面</a></p>');
       }
     }
   });
@@ -149,7 +150,7 @@ if (Meteor.isServer) {
         to: to,
         from: from,
         subject: subject,
-        text: text
+        html: text
       });
     }
   });
