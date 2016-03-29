@@ -4,9 +4,8 @@ Index = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <p>This is the index route.</p>
-        <a href='/foo'>Show me your foo.</a>
+      <div id='main'>
+        asdfasd
       </div>
     );
   }

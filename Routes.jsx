@@ -9,8 +9,9 @@ Routes = React.createClass({
     return (
       <Router history={browserHistory}>
         <Route path='/' component={App}>
+          <IndexRoute component={Authenticator} />
           <Route path='signin' component={SignIn} />
-          <IndexRoute component={Index}/>
+          <Route path='register' component={Register} />
           <Route path='myorder' component={Authenticator}>
             <IndexRoute component={MyOrder} />
           </Route>

@@ -1,62 +1,138 @@
-// App component - represents the whole app
+const {Router, Route, IndexRoute, browserHistory} = ReactRouter;
+
 SignIn = React.createClass({
   getInitialState() {
     return {
-      // hideCompleted: false
+      renderRegister: false
     }
   },
 
-  // // This mixin makes the getMeteorData method work
-  // mixins: [ReactMeteorData],
- 
-  // // Loads items from the Tasks collection and puts them on this.data.tasks
-  // getMeteorData() {
-  //   let query = {};
- 
-  //   return {
-  //     dishes: Dishes.find(query, {sort: {createdAt: -1}}).fetch(),
-  //     currentUser: Meteor.user()
-  //   };
-  // },
- 
-  // renderDishes() {
-  //   return this.data.dishes.map((dish) => {
-  //     const currentUserId = this.data.currentUser && this.data.currentUser._id;
- 
-  //     return <Dish
-  //       key={dish._id}
-  //       dish={dish} />;
-  //   });
-  // },
+  componentDidMount() {
+    if (Meteor.user()) {
+      browserHistory.push('/myorder');
+    }
 
-  // handleSubmit(event) {
-  //   event.preventDefault();
- 
-  //   // Find the text field via the React ref
-  //   const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
- 
-  //   Meteor.call('addDish', text);
-  //   Meteor.call('getAllRecords', 'seany')
+    const username = React.findDOMNode(this.refs.username);
+    username.focus();
 
-  //   // Clear form
-  //   ReactDOM.findDOMNode(this.refs.textInput).value = '';
-  // },
+  },
 
   render() {
 
+    const iconClass = classNames(
+      'big-icon',
+      {
+        'icon-account_circle': !this.state.renderRegister,
+        'icon-person_add': this.state.renderRegister
+      }
+    );
+
+
     return (
-      <div className='container'>
-        <AccountsUIWrapper />
-          <div>
-            <a href='myorder'>Go to my order</a>
-          </div>
-          <div>
-            <a href='myprofile'>Go to my profile</a>
-          </div>
-          <div>
-            <a href='orderHistory'>Go to order history</a>
-          </div>
+      <div id='sign-in'>
+        {
+          true &&
+          <AccountsUIWrapper />
+        }
+        <span className={iconClass}></span>
+        <div className='panel'>
+          <input ref='username' type='text' name='username' placeholder='用户名' />
+          <input ref='password' type='password' name='password' placeholder='密码'/>
+          {
+            this.state.renderRegister &&
+            <input ref='cpassword' type='password' name='cpassword' placeholder='密码确认'/>
+          }
+          {
+            this.state.warning &&
+            <span className='warning'>{this.state.warning}</span>
+          }
+          {
+            this.state.renderRegister &&
+            <div className='submit' onClick={this._createUser} > 完成 </div>
+          }
+          {
+            !this.state.renderRegister &&
+            <div className='submit' onClick={this._login} > 登录 </div>
+          }
+          {
+            this.state.renderRegister &&
+            <div className='switch' onClick={this._renderSignIn} > 返回登录 </div>
+          }
+          {
+            !this.state.renderRegister &&
+            <div className='switch' onClick={this._renderRegister} > 注册 </div>
+          }
+        </div>
+        
       </div>
     );
+  },
+
+  _login() {
+    const username = React.findDOMNode(this.refs.username);
+    const password = React.findDOMNode(this.refs.password);
+
+
+    Meteor.loginWithPassword(username.value, password.value, (res) => {
+      if (res && res.error) {
+        let warning = '';
+        switch (res.reason) {
+          case 'User not found': 
+            warning = '用户名不存在';
+            break;
+
+          case 'Incorrect password': 
+            warning = '密码不正确';
+            break;
+
+          default:
+            console.error(res.error);
+            break;
+        }
+        
+        this.setState({
+          warning: warning
+        });
+      } else {
+        browserHistory.push('/myorder');
+      }
+    });
+  },
+
+  _renderSignIn() {
+    this.setState({
+      renderRegister: false,
+      warning: null
+    });
+    const username = React.findDOMNode(this.refs.username);
+    username.focus();
+  },
+
+  _renderRegister() {
+    this.setState({
+      renderRegister: true,
+      warning: null
+    });
+    const username = React.findDOMNode(this.refs.username);
+    username.focus();
+  },
+
+  _createUser() {
+    const username = React.findDOMNode(this.refs.username);
+    const password = React.findDOMNode(this.refs.password);
+    const cpassword = React.findDOMNode(this.refs.cpassword);
+
+    if (password.value !== cpassword) {
+      this.setState({
+        warning: '两次密码输入不一致'
+      });
+    } else {
+      this.setState({
+        warning: null
+      });
+      Meteor.createUser(username.value, password.value);
+
+    }
   }
+
 });

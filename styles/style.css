@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'icomoon';
+    src:    url('fonts/icomoon.eot?qekaqh');
+    src:    url('fonts/icomoon.eot?qekaqh#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.ttf?qekaqh') format('truetype'),
+        url('fonts/icomoon.woff?qekaqh') format('woff'),
+        url('fonts/icomoon.svg?qekaqh#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-account_circle:before {
+    content: "\e853";
+}
+.icon-phone:before {
+    content: "\e0cd";
+}
+.icon-time_to_leave:before {
+    content: "\e62c";
+}
+.icon-insert_invitation:before {
+    content: "\e24f";
+}
+.icon-insert_comment:before {
+    content: "\e24c";
+}
+.icon-person_add:before {
+    content: "\e7fe";
+}
+.icon-person_pin_circle:before {
+    content: "\e56a";
+}
+.icon-send:before {
+    content: "\e163";
+}
+.icon-settings:before {
+    content: "\e8b8";
+}
+
