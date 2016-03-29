@@ -10,6 +10,41 @@ body
   color: #555
   margin: 0
 
+.container 
+  padding: 10px
+#top-nav
+  @include flexbox
+  @include justify-content(flex-start)
+  @include align-items(center)
+  @include flex-direction(row)
+  padding: 10px
+  width: 100%
+  background: #7DCBC8
+  color: #fff
+  a
+    text-decoration: none
+    color: #fff
+  .links
+    width: 80%
+    .link
+      padding: 5px 10px
+      &.active
+        background: #95D7D5
+        
+
+  .avatar
+    @include flexbox
+    @include justify-content(flex-end)
+    width: 20%
+    padding: 0 20px
+
+#login-dropdown-list 
+  position: absolute
+  top: 32px
+  left: -200px
+  .login-close-text
+    color: #555  
+
 #root
   width: 100%
   height: calc(100vh)

@@ -20,8 +20,6 @@ MyOrder = React.createClass({
 
     const today = new VDDate(new Date()).beginningOfDay();
     const tomorrow = new VDDate(new Date()).tomorrow();
-    console.log(today);
-    console.log(tomorrow);
     if (Meteor.user() && this.state.hideCompleted) {
       // If hide completed is checked, filter tasks
       incompleteQuery = {
