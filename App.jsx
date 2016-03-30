@@ -8,7 +8,10 @@ App = React.createClass({
   render() {
     return (
       <div className='wrap'>
-        <NavBar />
+        {
+          Meteor.user() &&
+          <NavBar />
+        }
         <div className='container'>
           {this.props.children}
         </div>

@@ -30,10 +30,6 @@ SignIn = React.createClass({
 
     return (
       <div id='sign-in'>
-        {
-          true &&
-          <AccountsUIWrapper />
-        }
         <span className={iconClass}></span>
         <div className='panel'>
           <input ref='username' type='text' name='username' placeholder='用户名' />
