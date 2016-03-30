@@ -93,12 +93,29 @@ if (Meteor.isServer) {
     added: function (id, fields) {
       if (!initializing) {
         let contact = Contacts.findOne({owner: fields.owner});
+        
+        const myOrder = Meteor.absoluteUrl() + 'myorder';
+        let orderDetail = '<div><p>订单如下：</p><ul>';
+        Object.keys(fields.items).forEach((key) => {
+          const item = fields.items[key];
+          if (item.quantity !== 0) {
+            orderDetail += '<li>'+item.name+' x '+item.quantity+item.unit+'</li>'
+          }
+        });
+        orderDetail += '</ul>';
+        orderDetail += '<p>Total Price: $'+fields.totalPrice+'</p>';
+        orderDetail += '</div>';
+
+        let emailContent = '<div><p>某某人已下单!</p></div>';
+        emailContent += orderDetail;
+        emailContent += '<div><a href="'+myOrder+'">去订单页面</a></div>';
+        
         Meteor.call('sendSMS', fields.customer.phone, fields.totalPrice, false, contact);
         Meteor.call('sendEmail',
                   contact.email,
                   'panorigin.prjs@gmail.com',
                   '下单',
-                  '某某人已下单!');
+                  emailContent);
       }
     }
   });
@@ -149,7 +166,7 @@ if (Meteor.isServer) {
         to: to,
         from: from,
         subject: subject,
-        text: text
+        html: text
       });
     }
   });

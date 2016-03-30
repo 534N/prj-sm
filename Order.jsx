@@ -94,7 +94,7 @@ Order = React.createClass({
                 this.props.order.customer.email,
                 'panorigin.prjs@gmail.com',
                 '订单更新',
-                '你好，我们已经开始处理您的订单!');
+                '<p>你好，我们已经开始处理您的订单!</p>');
     Meteor.call('setDispatched', this.props.order._id, true);
     this.setState({
       processing: true,
