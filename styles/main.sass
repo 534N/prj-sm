@@ -12,6 +12,39 @@ body
 
 .container 
   padding: 10px
+
+.master-control
+  @include flexbox
+  @include justify-content(flex-end)
+  @include align-items(center)
+  @include flex-direction(row)
+  margin: 10px 0
+
+.button
+  color: #fff
+  padding: 5px 10px
+  cursor: pointer
+  opacity: 0.8
+  text-align: center
+  &:hover
+    opacity: 1
+  &.prime
+    background: #0088cc
+  &.remove
+    background: #f54
+  &.small
+    width: 60px
+    font-size: 1em
+  &.large
+    width: 120px
+    font-size: 1.1em
+
+
+
+#create-dish-panel
+  border-bottom: 1px solid #eee
+#schedule-info
+  border-bottom: 1px solid #eee
 #top-nav
   @include flexbox
   @include justify-content(flex-start)
@@ -30,7 +63,7 @@ body
       padding: 5px 10px
       &.active
         background: #95D7D5
-        
+
 
   .avatar
     @include flexbox
@@ -115,6 +148,31 @@ body
       &:hover
         opacity: 1
 
+#my-profile
+  input
+    width: 300px
+    font-size: 1em
+    margin-left: 1em
+    padding: 5px
+    border: 0
+    border-bottom: 1px solid #ccc
+  ul
+    list-style-type: none
+    display: table
+    li
+      display: table-row
+      margin-bottom: 5px
+      span 
+        display: table-cell
+  .header
+    font-size: 1.2em
+    background: #f1f1f1
+    padding: 5px 10px
+
+  .control
+    @include flexbox
+    @include justify-content(flex-end)
+    margin: 1em 0
 
 #main
   @include flexbox

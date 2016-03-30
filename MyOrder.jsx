@@ -138,7 +138,6 @@ MyOrder = React.createClass({
     return (
       <div className='container' id='order-list'>
         <header>
-          <AccountsUIWrapper />
           <div className='date'>{moment().format('LLLL')}</div>
           <div className={optionClassName}>
             <div className={tabIncompleteClassName} onClick={this._setCurrent.bind(this, 'incomplete')}>未处理订单 ({this.data.incompleteCount})</div>

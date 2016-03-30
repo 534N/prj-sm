@@ -39,31 +39,36 @@ MyProfileDish = React.createClass({
   render() {
     return (
       <ul>
-        <li>Name: 
+        <li>菜名: 
           <input
             type="text"
             ref="dishName"
             defaultValue={this.props.dish.name} />
         </li>
-        <li>Price: 
+        <li>价格: 
           <input
             type="text"
             ref="dishPrice"
             defaultValue={this.props.dish.price} />
         </li>
-        <li>Unit: 
+        <li>单位: 
           <input
             type="text"
             ref="dishUnit"
             defaultValue={this.props.dish.unit} />
         </li>
-        <li>Note: 
+        <li>备注: 
           <input
             type="text"
             ref="dishNote"
             defaultValue={this.props.dish.note} />
         </li>
-        <button onClick={this.handleDeleteDish}>Delete this dish</button>
+        <li>
+          <span></span>
+          <span className='control'>
+            <div className='button remove small' onClick={this.handleDeleteDish}>删除</div>
+          </span>
+        </li>
       </ul>
     );
   }

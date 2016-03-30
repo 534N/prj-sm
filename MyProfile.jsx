@@ -142,53 +142,87 @@ MyProfile = React.createClass({
 
   render() {
     return (
-      <div className="container">
-        <header>
-          <h1>Profile</h1>
-        </header>
-
+      <div id='my-profile' className="container">
         <form>
-          <div>
-            <h2>Contacts Information</h2>
-            {this.renderContacts()}
+          <div className='master-control'>
+            <div className="button prime large" onClick={this.handleSubmit}>保存</div>
           </div>
+          <div className='header'>联系方式</div>
+          { this.renderContacts() }
 
-          <div>
-            <h2>Dishes Information</h2>
-            <div>
-              Dish Name: <input 
-                type="text"
-                ref="newDishName"
-                placeholder="Dish Name" />
-              $: <input 
-                type="text"
-                ref="newDishPrice"
-                placeholder="Dish Price" />
-              Unit: <input 
-                type="text"
-                ref="newDishUnit"
-                placeholder="Dish Unit" />
-              Note: <input 
-                type="text"
-                ref="newDishNote"
-                placeholder="Dish Note" />
-              <button type="button" onClick={this.handleAddDish}>Add Dish</button>
-            </div>
-            {this.renderDishes()}
+          <div className='header'>菜品</div>
+          <div id='create-dish-panel'>
+            <h4>添加新菜品</h4>
+            <ul>
+              <li>
+                菜名: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishName"
+                    placeholder="菜名" />
+                </span>
+              </li>
+              <li>
+                价格:
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishPrice"
+                    placeholder="价格" />
+                </span>
+              </li>
+              <li>
+                单位: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishUnit"
+                    placeholder="单位" />
+                </span>
+              </li>
+              <li>
+                备注: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishNote"
+                    placeholder="备注" />
+                </span>
+              </li>
+              <li>
+                <span></span>
+                <span className='control'>  
+                  <div className='button prime small' type="button" onClick={this.handleAddDish}>添加</div>
+                </span>
+              </li>
+            </ul>
           </div>
+          {this.renderDishes()}
 
-          <div>
-            <h2>Schedules Information</h2>
-            <div>
-              Schedule: <input 
-                type="text"
-                ref="newSchedule"
-                placeholder="New Schedule Time" />
-              <button type="button" onClick={this.handleAddSchedule}>Add Schedule</button>
-            </div>
+          <div id='schedule-info'>
+            <div className='header'>提货时间</div>
+            <ul>
+              <li>添加提货时间: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newSchedule"
+                    placeholder="上午取 (11:00 - 13:00)" />
+                </span>
+              </li>
+              <li>
+                <span></span>
+                <span className='control'>
+                  <div className="button prime small" onClick={this.handleAddSchedule}>确定</div>
+                </span>
+              </li>
+            </ul>
             {this.renderSchedules()}
           </div>
-          <button type="button" onClick={this.handleSubmit}>Save Change</button>
+          <div className='master-control'>
+            <div className="button prime large" onClick={this.handleSubmit}>保存</div>
+          </div>
         </form>
       </div>
     );

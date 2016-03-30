@@ -21,24 +21,30 @@ MyProfileContact = React.createClass({
 
   render() {
     return (
-      <ul>
-        <li>Address: 
-          <input
-            type="text"
-            ref="address"
-            defaultValue= {this.props.contact.address} />
+      <ul className='contact-info'>
+        <li>地址: 
+          <span>
+            <input
+              type="text"
+              ref="address"
+              defaultValue= {this.props.contact.address} />
+          </span>
         </li>
-        <li>Phone: 
-          <input
-            type="text"
-            ref="phone"
-            defaultValue={this.props.contact.phone} />
+        <li>电话: 
+          <span> 
+            <input
+              type="text"
+              ref="phone"
+              defaultValue={this.props.contact.phone} />
+          </span>
         </li>
-        <li>Email: 
-          <input
-            type="text"
-            ref="email"
-            defaultValue={this.props.contact.email} />
+        <li>电邮: 
+          <span>
+            <input
+              type="text"
+              ref="email"
+              defaultValue={this.props.contact.email} />
+          </span>
         </li>
       </ul>
     );
