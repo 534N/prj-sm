@@ -4,7 +4,7 @@ MyOrderHistory = React.createClass({
       search: false,
       historyFrom: '',
       historyTo: '',
-      viewMode: '',
+      viewMode: 'Daily',
       day: ''
     }
   },
@@ -269,12 +269,12 @@ MyOrderHistory = React.createClass({
                 }
                 
                 return (
-                  <li key={key}> {dish.name} x {dish.quantity}{dish.unit} </li>
+                  <li key={key}> {dish.name} 单价: ${dish.price.toFixed(2)} 数量: {dish.quantity}{dish.unit} 总额: ${(dish.price * dish.quantity).toFixed(2)}</li>
                 )
               })
             }
             </ul>
-            Total Price: ${totalPrice.toFixed(2)}
+            总计: ${totalPrice.toFixed(2)}
           </div>
         );
       }
