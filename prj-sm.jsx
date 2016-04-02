@@ -344,21 +344,6 @@ Meteor.methods({
     Tasks.update(taskId, { $set: { private: setToPrivate } });
   },
 
-  // // image upload related
-  // saveDishImage(dishImagePreviewUrl, path) {
-  //   const fs = Npm.require('fs');
-  //   const base_dir = process.env.PWD;
-  //   fs.readFile(dishImagePreviewUrl, (error, data) => {
-  //     fs.writeFile(base_dir + path, data, (err) => {
-  //       if (err) {
-  //         console.log(err);
-  //       } else {
-  //         console.log('upload success');
-  //       }
-  //     });
-  //   });
-  // },
-
   setProfileInfo(contactID, contact, dishIDs, dish, scheduleID, schedule) {
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authorized');

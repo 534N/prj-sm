@@ -75,13 +75,7 @@ MyProfile = React.createClass({
       let dishPrice = this.refs['myProfileDish'+i].getDishPrice();
       let dishUnit = this.refs['myProfileDish'+i].getDishUnit();
       let dishNote = this.refs['myProfileDish'+i].getDishNote();
-      // //image upload related
-      // let dishImageFileType = this.refs['myProfileDish'+i].getDishImageFileType();
-      // let dishImagePreviewUrl = this.refs['myProfileDish'+i].getDishImagePreviewUrl();
-      // console.log(dishImageFileType);
-      // console.log(dishImagePreviewUrl);
       
-      // console.log(dishID);
       //if dish name and price are not empty, then update
       if (dishName && dishPrice) {
         dishIDs.push(dishID);
@@ -91,13 +85,6 @@ MyProfile = React.createClass({
         this.refs['myProfileDish'+i].setDishDefaultName();
         this.refs['myProfileDish'+i].setDishDefaultPrice();
       }
-
-      // //image upload related
-      // if (dishImageFileType && dishImagePreviewUrl) {
-      //   const name = dishName.replace(/\.\./g,'').replace(/\//g,'');
-      //   const path = '/public/' + this.data.currentUser._id + '/' + name + '.' + dishImageFileType;
-      //   Meteor.call('saveDishImage', dishImagePreviewUrl, path);
-      // }
     }
     // console.log(dishIDs);
     // console.log(dish);
