@@ -114,6 +114,7 @@ if (Meteor.isServer) {
         Meteor.call('sendEmail',
                   contact.email,
                   'panorigin.prjs@gmail.com',
+                  'panorigin.prjs@gmail.com',
                   '下单',
                   emailContent);
       }
@@ -155,7 +156,7 @@ if (Meteor.isServer) {
       });
     },
 
-    sendEmail(to, from, subject, text) {
+    sendEmail(to, from, cc, subject, text) {
       check([to, from, subject, text], [String]);
 
       // Let other method calls from the same client start running,
@@ -165,6 +166,7 @@ if (Meteor.isServer) {
       Email.send({
         to: to,
         from: from,
+        cc: cc,
         subject: subject,
         html: text
       });
@@ -341,6 +343,21 @@ Meteor.methods({
  
     Tasks.update(taskId, { $set: { private: setToPrivate } });
   },
+
+  // // image upload related
+  // saveDishImage(dishImagePreviewUrl, path) {
+  //   const fs = Npm.require('fs');
+  //   const base_dir = process.env.PWD;
+  //   fs.readFile(dishImagePreviewUrl, (error, data) => {
+  //     fs.writeFile(base_dir + path, data, (err) => {
+  //       if (err) {
+  //         console.log(err);
+  //       } else {
+  //         console.log('upload success');
+  //       }
+  //     });
+  //   });
+  // },
 
   setProfileInfo(contactID, contact, dishIDs, dish, scheduleID, schedule) {
     if (! Meteor.userId()) {

@@ -3,6 +3,14 @@ MyProfileDish = React.createClass({
     dish: React.PropTypes.object.isRequired
   },
 
+  // //image upload related
+  // getInitialState() {
+  //   return {
+  //     fileType: '',
+  //     imagePreviewUrl: ''
+  //   }
+  // },
+
   getDishID() {
     return this.props.dish._id;
   },
@@ -23,6 +31,15 @@ MyProfileDish = React.createClass({
     return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
   },
 
+  // //image upload related
+  // getDishImageFileType() {
+  //   return this.state.fileType;
+  // },
+
+  // getDishImagePreviewUrl() {
+  //   return this.state.imagePreviewUrl;
+  // },
+
   setDishDefaultName() {
     ReactDOM.findDOMNode(this.refs.dishName).value = ReactDOM.findDOMNode(this.refs.dishName).defaultValue;
   },
@@ -31,12 +48,41 @@ MyProfileDish = React.createClass({
     ReactDOM.findDOMNode(this.refs.dishPrice).value = ReactDOM.findDOMNode(this.refs.dishPrice).defaultValue;
   },
 
+  // //image upload related
+  // handleChange(e) {
+  //   e.preventDefault();
+
+  //   let reader = new FileReader();
+  //   let file = e.target.files[0];
+  //   console.log(file.type);
+  //   console.log(reader.result);
+  //   reader.onloadend = () => {
+  //     console.log(reader.result);
+  //     console.log(file.type.split('/')[1]);
+  //     this.setState({
+  //       fileType: file.type.split('/')[1],
+  //       imagePreviewUrl: reader.result
+  //     });
+  //     const name = file.name;
+  //     const path = '/public/nKgTu3AEmAbDR2dWH' + '/' + name;
+  //     Meteor.call('saveDishImage', reader.result, path);
+  //   }
+
+  //   reader.readAsDataURL(file);
+  // },
+
   handleDeleteDish(e) {
     e.preventDefault();
     Meteor.call('deleteDish', this.props.dish._id);
   },
 
   render() {
+    // //image upload related
+    // let {imagePreviewUrl} = this.state;
+    // let $imagePreview = null;
+    // if (imagePreviewUrl) {
+    //   $imagePreview = (<img src={imagePreviewUrl} />);
+    // }
     return (
       <ul>
         <li>菜名: 
@@ -63,6 +109,15 @@ MyProfileDish = React.createClass({
             ref="dishNote"
             defaultValue={this.props.dish.note} />
         </li>
+        {/*image upload related
+        <li>图片:
+          <input
+            type="file"
+            name="fileToUpload"
+            id="fileToUpload"
+            onChange={this.handleChange} />
+          {$imagePreview}
+        </li>*/}
         <li>
           <span></span>
           <span className='control'>
