@@ -76,7 +76,6 @@ MyProfile = React.createClass({
       let dishUnit = this.refs['myProfileDish'+i].getDishUnit();
       let dishNote = this.refs['myProfileDish'+i].getDishNote();
       
-      // console.log(dishID);
       //if dish name and price are not empty, then update
       if (dishName && dishPrice) {
         dishIDs.push(dishID);

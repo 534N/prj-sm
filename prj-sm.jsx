@@ -114,6 +114,7 @@ if (Meteor.isServer) {
         Meteor.call('sendEmail',
                   contact.email,
                   'panorigin.prjs@gmail.com',
+                  'panorigin.prjs@gmail.com',
                   '下单',
                   emailContent);
       }
@@ -155,7 +156,7 @@ if (Meteor.isServer) {
       });
     },
 
-    sendEmail(to, from, subject, text) {
+    sendEmail(to, from, cc, subject, text) {
       check([to, from, subject, text], [String]);
 
       // Let other method calls from the same client start running,
@@ -165,6 +166,7 @@ if (Meteor.isServer) {
       Email.send({
         to: to,
         from: from,
+        cc: cc,
         subject: subject,
         html: text
       });

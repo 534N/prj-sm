@@ -4,7 +4,7 @@ MyOrderHistory = React.createClass({
       search: false,
       historyFrom: '',
       historyTo: '',
-      viewMode: '',
+      viewMode: 'Daily',
       day: ''
     }
   },
@@ -138,7 +138,7 @@ MyOrderHistory = React.createClass({
   },
 
   renderOrderBasedOnViewMode() {
-    if (this.state.search) {
+    // if (this.state.search) {
       if (this.state.day) {
         const startDay = new Date(this.state.day);
         const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
@@ -160,11 +160,11 @@ MyOrderHistory = React.createClass({
           }
         });
       }
-    }
+    // }
   },
 
   renderViewModes() {
-    if (this.state.search) {
+    // if (this.state.search) {
       let views = ['Daily View', 'Monthly View'];
       return (
         <ul>
@@ -179,11 +179,11 @@ MyOrderHistory = React.createClass({
         }
         </ul>
       )
-    }
+    // }
   },
 
   renderTimeList() {
-    if (this.state.search) {
+    // if (this.state.search) {
       let days = [];
       let day = '';
       let track = {};
@@ -213,11 +213,11 @@ MyOrderHistory = React.createClass({
         }
         </ul>
       )
-    }
+    // }
   },
 
   renderSummary() {
-    if (this.state.search) {
+    // if (this.state.search) {
       if (this.state.day) {
         const startDay = new Date(this.state.day);
         const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
@@ -269,16 +269,16 @@ MyOrderHistory = React.createClass({
                 }
                 
                 return (
-                  <li key={key}> {dish.name} x {dish.quantity}{dish.unit} </li>
+                  <li key={key}> {dish.name} 单价: ${dish.price.toFixed(2)} 数量: {dish.quantity}{dish.unit} 总额: ${(dish.price * dish.quantity).toFixed(2)}</li>
                 )
               })
             }
             </ul>
-            Total Price: ${totalPrice.toFixed(2)}
+            总计: ${totalPrice.toFixed(2)}
           </div>
         );
       }
-    }
+    // }
   },
 
   handleSearch(e) {
@@ -318,7 +318,7 @@ MyOrderHistory = React.createClass({
           <h1>Order History</h1>
         </header>
 
-        <div>
+        {/*<div>
           From: <input 
           type="text"
           ref="historyFrom"
@@ -329,7 +329,7 @@ MyOrderHistory = React.createClass({
           placeholder="yyyy/mm/dd" />
           <button type="button" onClick={this.handleSearch}>Search</button>
           <button type="button" onClick={this.handleClearSearch}>Clear</button>
-        </div>
+        </div>*/}
 
         <div>
           {this.renderViewModes()}
