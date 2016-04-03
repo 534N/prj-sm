@@ -75,11 +75,12 @@ MyProfile = React.createClass({
       let dishPrice = this.refs['myProfileDish'+i].getDishPrice();
       let dishUnit = this.refs['myProfileDish'+i].getDishUnit();
       let dishNote = this.refs['myProfileDish'+i].getDishNote();
+      let dishSupply = this.refs['myProfileDish'+i].getDishSupply();
       
       //if dish name and price are not empty, then update
       if (dishName && dishPrice) {
         dishIDs.push(dishID);
-        dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote});
+        dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, supply: dishSupply});
       } else {
         //if dish name and price are both empty, reset to default value
         this.refs['myProfileDish'+i].setDishDefaultName();
@@ -107,12 +108,13 @@ MyProfile = React.createClass({
     const dishPrice = parseFloat(ReactDOM.findDOMNode(this.refs.newDishPrice).value.trim());
     const dishUnit = ReactDOM.findDOMNode(this.refs.newDishUnit).value.trim();
     const dishNote = ReactDOM.findDOMNode(this.refs.newDishNote).value.trim();
+    const dishSupply = parseInt(ReactDOM.findDOMNode(this.refs.newDishSupply).value.trim());
     const dishOwner = this.data.currentUser.username;
     // console.log(dishName);
     // console.log(dishPrice);
     // console.log(dishUnit);
     // console.log(dishNote);
-    const dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, owner: dishOwner};
+    const dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, supply: dishSupply, owner: dishOwner};
 
     //if both dish name and price are there, then insert
     if (dishName && dishPrice) {
@@ -123,6 +125,7 @@ MyProfile = React.createClass({
     ReactDOM.findDOMNode(this.refs.newDishPrice).value = "";
     ReactDOM.findDOMNode(this.refs.newDishUnit).value = "";
     ReactDOM.findDOMNode(this.refs.newDishNote).value = "";
+    ReactDOM.findDOMNode(this.refs.newDishSupply).value = "";
   },
 
   handleAddSchedule(e) {
@@ -187,6 +190,15 @@ MyProfile = React.createClass({
                     type="text"
                     ref="newDishNote"
                     placeholder="备注" />
+                </span>
+              </li>
+              <li>
+                每日供应量: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishSupply"
+                    placeholder="供应量" />
                 </span>
               </li>
               <li>

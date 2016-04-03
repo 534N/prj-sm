@@ -3,6 +3,7 @@ Orders = new Mongo.Collection('orders');
 Dishes = new Mongo.Collection('dishes');
 Schedules = new Mongo.Collection('schedules');
 Contacts = new Mongo.Collection('contacts');
+Controls = new Mongo.Collection('controls');
 
 if (Meteor.isClient) {
   // This code is executed on the client only
@@ -17,6 +18,7 @@ if (Meteor.isClient) {
   Meteor.subscribe('dishes');
   Meteor.subscribe('contacts');
   Meteor.subscribe('schedules');
+  Meteor.subscribe('controls');
 
   Meteor.startup(function () {
     ReactDOM.render(<Routes />, document.getElementById('root'));
@@ -65,6 +67,10 @@ if (Meteor.isServer) {
 
   Meteor.publish('schedules', function() {
     return Schedules.find({});
+  });
+
+  Meteor.publish('controls', function() {
+    return Controls.find({});
   });
 
   // 
@@ -359,5 +365,21 @@ Meteor.methods({
 
     //update the Schedules collection records
     Schedules.update(scheduleID, {$set: {schedule: schedule}});
+  },
+
+  addControl(control) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Controls.insert(control);
+  },
+
+  setControl(owner, type, close) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Controls.update({owner: owner, type: type}, {$set: {close: close}});
   }
 });
