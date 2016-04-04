@@ -1,5 +1,9 @@
 @import 'includes/_flexbox'
 @import 'includes/_prefixer-mixin'
+// @import 'includes/_device'
+
+$price-color: #7bbb5e
+
 
 html
   background: #fff
@@ -13,6 +17,7 @@ body
 .container 
   padding: 10px
   height: 100%
+  box-sizing: border-box
 .master-control
   @include flexbox
   @include justify-content(flex-end)
@@ -29,7 +34,10 @@ body
   &:hover
     opacity: 1
   &.prime
-    background: #0088cc
+    background: #8CB6CD
+  &.grant
+    background: #FAD081
+    font-size: 1.2em
   &.remove
     background: #f54
   &.small
@@ -39,6 +47,12 @@ body
     width: 120px
     font-size: 1.1em
 
+.money
+  color: $price-color
+.small
+  font-size: 0.8em  
+.fade
+  opacity: 0.8
 
 
 #create-dish-panel
@@ -54,6 +68,7 @@ body
   width: 100%
   background: #7DCBC8
   color: #fff
+  box-sizing: border-box
   a
     text-decoration: none
     color: #fff
@@ -132,7 +147,7 @@ body
       
     .submit
       padding: 0.5em 1em
-      background: #FBCE3F
+      background: #8CB6CD
       color: #fff
       font-size: 1em
       margin-top: 1em
@@ -148,9 +163,115 @@ body
       &:hover
         opacity: 1
 
+#order-history
+  .header
+    font-size: 1.2em
+    background: #f1f1f1
+    padding: 5px 10px
+  .view-mode-container
+    @include flexbox
+    @include align-items(center)
+    @include justify-content(flex-start)
+    padding: 5px 0
+    .view-mode
+      padding: 5px 10px 
+      cursor: pointer
+
+      &.active
+        background: #8CB6CD
+        color: #fff
+  .content
+    @include flexbox
+    @include flex-direction(row)
+    .left
+      @include flex-basis(20%)
+      .history-date
+        cursor: pointer
+        opacity: 0.8
+        padding: 0.5em
+        white-space: nowrap
+        &:hover
+          opacity: 1
+          background: #e1e1e1
+        &.active
+          background: #8CB6CD
+          color: #fff
+      ul
+        list-style-type: none
+        padding: 10px
+        margin: 0
+
+    .right
+      @include flex-basis(80%)
+      padding: 1em
+      background: #f8f8f8
+      .summary
+        margin-bottom: 1em
+        .statement
+          font-size: 1.2em
+          font-weight: 500
+          font-style: italic
+        ul
+          margin: 0
+          padding: 0
+      .order-container
+        margin-bottom: 1em
+        .order-entry
+          background: #fff
+          box-sizing: border-box
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2)
+          color: #888
+          .order-info
+            @include flexbox
+            @include flex-direction(row)
+            width: 100%
+            padding: 1em 1em 0.5em 1em
+            box-sizing: border-box
+            .order-number
+              @include flex-basis(50%)
+              color: #E49A91
+            .timestamp
+              @include flex-basis(50%)
+              text-align: right
+          .order-status
+            color: #f54
+            padding: 0 1em
+            box-sizing: border-box
+            &.completed
+              color: #aaa
+            &.dispatched
+              color: #FAD081
+          .order-summary
+            @include flexbox
+            @include flex-direction(row)
+            width: 100%
+            background: #fafafa
+            box-sizing: border-box
+            padding: 1em
+            .customer-info
+              @include flex-basis(50%)
+            .total
+              @include flex-basis(50%)
+              text-align: right
+      ul
+        list-style-type: none
+        display: table
+        padding-left: 1em
+        li
+          display: table-row
+          margin-bottom: 5px
+          border-bottom: #ddd
+          span 
+            display: table-cell
+            padding: 0.5em 1em
+            border-bottom: 1px solid #ddd
+            &.name
+              color: #000
+              font-weight: 400
+
 #my-profile
   input
-    width: 300px
+    width: 220px
     font-size: 1em
     margin-left: 1em
     padding: 5px
@@ -159,6 +280,7 @@ body
   ul
     list-style-type: none
     display: table
+    padding: 0 20px
     li
       display: table-row
       margin-bottom: 5px
@@ -205,7 +327,7 @@ body
     padding: 10px 
     cursor: pointer
     &.active
-      background: #0088cc
+      background: #8CB6CD
       color: #fff
 
 #order-list
@@ -254,7 +376,7 @@ body
             padding-top: 2em
             text-align: center
           &.price 
-            color: #0088cc
+            color: #8CB6CD
             font-style: italic
           .customer-info
             position: absolute
@@ -324,3 +446,7 @@ body
     //     background: #828E9A
     //     color: #F6C674
     // .comment
+// @media #{$portrait-none-ios-mobile}
+//   #sign-in
+//     input
+//       width: 200px

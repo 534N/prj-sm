@@ -7,6 +7,7 @@ MyOrderHistory = React.createClass({
       viewMode: 'Daily',
       day: ''
     }
+    moment.locale();
   },
 
   mixins: [ReactMeteorData],
@@ -38,7 +39,7 @@ MyOrderHistory = React.createClass({
 
   //store the dates that have orders and also the number of orders of that date
   getDaysCounts(days, day, track) {
-    if (this.state.viewMode == "Monthly") {
+    if (this.state.viewMode === 'Monthly') {
       const split = day.split('/');
       day = [split[0], split[1]].join('/');
     }
@@ -46,7 +47,7 @@ MyOrderHistory = React.createClass({
     if (!days.length) {
       days.push({date: day, count: 1});
     } else {
-      if (days[track.index].date == day) {
+      if (days[track.index].date === day) {
         days[track.index].count += 1;
       } else {
         days.push({date:day, count: 1});
@@ -78,108 +79,145 @@ MyOrderHistory = React.createClass({
     return inRange;
   },
 
-  handleDayOrder(e) {
-    e.preventDefault();
-    
+  handleDayOrder(day) {
     this.setState({
-      day: e.target.text
+      day: day
     });
   },
 
-  handleView(e) {
-    e.preventDefault();
-
-    const view = e.target.text.match(/(.*)\sView/);
+  handleView(mode) {
     this.setState({
-      viewMode: view[1],
+      viewMode: mode,
       day: ''
     });
   },
 
   renderItem(items) {
+
     return (
       Object.keys(items).map(key => {
         const item = items[key];
+
+        console.debug('item: ', item);
         if (item.quantity === 0) {
           return;
         }
 
         return (
-          <li key={key}> {item.name} x {item.quantity}{item.unit} </li>
+          <li key={key}>
+           <span className='name'>{item.name}</span>
+           <span>{`${item.quantity} ${item.unit}`}</span>
+           <span>{`$${item.quantity * item.price}`}</span>
+          </li>
         )
       })
     );
   },
 
   renderOrder(order) {
+    const format = this.state.viewMode === 'Daily' ? 'LT' : 'LLLL';
+    const statusClass = classNames(
+      'order-status',
+      {
+        completed: order.completed,
+        dispatched: !order.completed && order.dispatched
+      }
+    );
+
+    let status = '未处理';
+    if (order.completed) {
+      status = `完成 @ ${moment(order.completedAt).format(format)}`;
+    } else if (order.dispatched) {
+      status = `处理中`;
+    }
+
     return (
-      <div>
-        <div className='customer-info'>
-          下单时间: {moment(order.createdAt).format('L')} {moment(order.createdAt).format('LT')}, 电话: {order.customer.phone}
+      <div className='order-entry'>
+        <div className='order-info'>
+          <div className='order-number'>
+            订单号 #{order.orderNumber ? order.orderNumber : order._id}
+          </div>
+          <div className='timestamp'>
+            <span className="icon-schedule"></span> {moment(order.createdAt).format(format)}
+          </div>
+        </div>
+        <div className={statusClass}>
+          {status}
         </div>
         <ul>
           {this.renderItem(order.items)}
         </ul>
-        <div className='other price'>
-          $ {order.totalPrice.toFixed(2)}
+        <div className='order-summary'>
+          <div className='customer-info'>
+            <span className="icon-phone"></span> {order.customer.phone}
+          </div>
+          <div className='total'>
+            <span className='small'>共计 </span>
+            <span className='money'>${order.totalPrice.toFixed(2)}</span>
+          </div>
         </div>
-        <div className='other'>
-          {order.pickupDay}
-        </div>
-        <div className='other'>
-          {order.pickupTime}
-        </div>
-        <div className='other'>
-          {order.comment}
-        </div>
-        <br />
+        {
+          // <div className='other'>
+          //   {order.pickupTime}
+          //   {order.pickupDay} 
+          // </div>
+          // <div className='other'>
+          //   {order.comment}
+          // </div>
+        }
       </div>
     );
   },
 
   renderOrderBasedOnViewMode() {
-    // if (this.state.search) {
-      if (this.state.day) {
-        const startDay = new Date(this.state.day);
-        const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
+    if (this.state.day) {
+      const startDay = new Date(this.state.day);
+      const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
 
-        const historyFrom = this.state.historyFrom ? new Date(new Date(this.state.historyFrom).toLocaleDateString()) : '';
-        const historyTo = this.state.historyTo ? new Date(new Date(this.state.historyTo).getTime() + 60 * 60 * 24 * 1000) : '';
-        
-        return this.data.orders.map((order) => {
-          if (this.state.viewMode == "Daily") {
-            if (order.createdAt >= startDay && order.createdAt < endDay) {
-              return (<div key={order._id}>{this.renderOrder(order)}</div>);
-            }
-          } else if (this.state.viewMode == "Monthly") {
-            if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
-              if (order.createdAt.getFullYear() == startDay.getFullYear() && order.createdAt.getMonth() == startDay.getMonth()) {
-                return (<div key={order._id}>{this.renderOrder(order)}</div>);
-              }
+      const historyFrom = this.state.historyFrom ? new Date(new Date(this.state.historyFrom).toLocaleDateString()) : '';
+      const historyTo = this.state.historyTo ? new Date(new Date(this.state.historyTo).getTime() + 60 * 60 * 24 * 1000) : '';
+      
+      return this.data.orders.map((order) => {
+        if (this.state.viewMode === 'Daily') {
+          if (order.createdAt >= startDay && order.createdAt < endDay) {
+            return (
+              <div className='order-container' key={order._id}>{this.renderOrder(order)}</div>
+            );
+          }
+        } else if (this.state.viewMode === 'Monthly') {
+          if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
+            if (order.createdAt.getFullYear() === startDay.getFullYear() && order.createdAt.getMonth() === startDay.getMonth()) {
+              return (
+                <div className='order-container' key={order._id}>{this.renderOrder(order)}</div>
+              );
             }
           }
-        });
-      }
-    // }
+        }
+      });
+    }
   },
 
   renderViewModes() {
-    // if (this.state.search) {
-      let views = ['Daily View', 'Monthly View'];
-      return (
-        <ul>
-        {
-          views.map((view) => {
-            return (
-              <li key={view}>
-                <a href='#' onClick={this.handleView}>{view}</a>
-              </li>
-            )
-          })
-        }
-        </ul>
-      )
-    // }
+    const dailyClass = classNames(
+      'view-mode',
+      {
+        active: this.state.viewMode === 'Daily'
+      }
+    );
+
+    const monthClass = classNames(
+      'view-mode',
+      {
+        active: this.state.viewMode === 'Monthly'
+      }
+    );
+
+    return (
+      <div className='view-mode-container'>
+        <div href='#' className={dailyClass} onClick={this.handleView.bind(this, 'Daily')}>按日结算</div>
+        <div href='#' className={monthClass} onClick={this.handleView.bind(this, 'Monthly')}>按月结算</div>
+      </div>
+    )
   },
 
   renderTimeList() {
@@ -199,14 +237,24 @@ MyOrderHistory = React.createClass({
         }
       });
 
+      
       return (
         <ul>
         {
           days.map((d) => {
+            const dateClass = classNames(
+              'history-date',
+              {
+                active: this.state.day === d.date
+              }
+            );
+
             return (
               <li key={d.date}>
-                <a href='#' onClick={this.handleDayOrder}>{d.date}</a>
-                <span>count: {d.count}</span>
+                <div href='#' onClick={this.handleDayOrder.bind(this, d.date)} className={dateClass}>
+                  <span>{d.date}</span>
+                  <span className='small fade'> ({d.count}单)</span>
+                </div>
               </li>
             );
           })
@@ -217,20 +265,32 @@ MyOrderHistory = React.createClass({
   },
 
   renderSummary() {
-    // if (this.state.search) {
-      if (this.state.day) {
-        const startDay = new Date(this.state.day);
-        const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
+    if (this.state.day) {
+      const startDay = new Date(this.state.day);
+      const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
 
-        const historyFrom = this.state.historyFrom ? new Date(new Date(this.state.historyFrom).toLocaleDateString()) : '';
-        const historyTo = this.state.historyTo ? new Date(new Date(this.state.historyTo).getTime() + 60 * 60 * 24 * 1000) : '';
+      const historyFrom = this.state.historyFrom ? new Date(new Date(this.state.historyFrom).toLocaleDateString()) : '';
+      const historyTo = this.state.historyTo ? new Date(new Date(this.state.historyTo).getTime() + 60 * 60 * 24 * 1000) : '';
 
-        let summary = {};
-        let totalPrice = 0;
-        this.data.orders.forEach((order) => {
-          if (this.state.viewMode == "Daily") {
-            if (order.createdAt >= startDay && order.createdAt < endDay) {
-              if (Object.keys(summary).length == 0 && JSON.stringify(summary) === JSON.stringify({})) {
+      let summary = {};
+      let totalPrice = 0;
+      this.data.orders.forEach((order) => {
+        if (this.state.viewMode === 'Daily') {
+          if (order.createdAt >= startDay && order.createdAt < endDay) {
+            if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
+              summary = order.items;
+            } else {
+              Object.keys(order.items).map(key => {
+                const item = order.items[key];
+                summary[key].quantity += order.items[key].quantity;
+              });
+            }
+            totalPrice += order.totalPrice;
+          }
+        } else if (this.state.viewMode === 'Monthly') {
+          if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
+            if (order.createdAt.getFullYear() === startDay.getFullYear() && order.createdAt.getMonth() === startDay.getMonth()) {
+              if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
                 summary = order.items;
               } else {
                 Object.keys(order.items).map(key => {
@@ -240,45 +300,37 @@ MyOrderHistory = React.createClass({
               }
               totalPrice += order.totalPrice;
             }
-          } else if (this.state.viewMode == "Monthly") {
-            if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
-              if (order.createdAt.getFullYear() == startDay.getFullYear() && order.createdAt.getMonth() == startDay.getMonth()) {
-                if (Object.keys(summary).length == 0 && JSON.stringify(summary) === JSON.stringify({})) {
-                  summary = order.items;
-                } else {
-                  Object.keys(order.items).map(key => {
-                    const item = order.items[key];
-                    summary[key].quantity += order.items[key].quantity;
-                  });
-                }
-                totalPrice += order.totalPrice;
-              }
-            }
           }
-        });
-        
-        return (
-          <div>
-            <h2>Summary</h2>
-            <ul>
-            {
-              Object.keys(summary).map((key) => {
-                const dish = summary[key];
-                if (dish.quantity === 0) {
-                  return;
-                }
-                
-                return (
-                  <li key={key}> {dish.name} 单价: ${dish.price.toFixed(2)} 数量: {dish.quantity}{dish.unit} 总额: ${(dish.price * dish.quantity).toFixed(2)}</li>
-                )
-              })
-            }
-            </ul>
-            总计: ${totalPrice.toFixed(2)}
+        }
+      });
+      
+      return (
+        <div>
+          <div className='statement'>
+            总计 <span className='money'>${totalPrice.toFixed(2)}</span>
           </div>
-        );
-      }
-    // }
+
+          <ul>
+          {
+            Object.keys(summary).map((key) => {
+              const dish = summary[key];
+              if (dish.quantity === 0) {
+                return;
+              }
+              
+              return (
+                <li key={key}> 
+                  <span>{dish.name}</span>
+                  <span>{`总数: ${dish.quantity} ${dish.unit} `}</span>
+                  <span>{`总额: $${(dish.price * dish.quantity).toFixed(2)}`}</span>
+                </li>
+              )
+            })
+          }
+          </ul>
+        </div>
+      );
+    }
   },
 
   handleSearch(e) {
@@ -307,43 +359,41 @@ MyOrderHistory = React.createClass({
       day: ''
     });
 
-    ReactDOM.findDOMNode(this.refs.historyFrom).value = "";
-    ReactDOM.findDOMNode(this.refs.historyTo).value = "";
+    ReactDOM.findDOMNode(this.refs.historyFrom).value = '';
+    ReactDOM.findDOMNode(this.refs.historyTo).value = '';
   },
 
   render() {
     return (
-      <div className="container">
-        <header>
-          <h1>Order History</h1>
-        </header>
-
+      <div id='order-history'>
         {/*<div>
           From: <input 
-          type="text"
-          ref="historyFrom"
-          placeholder="yyyy/mm/dd" />
+          type='text'
+          ref='historyFrom'
+          placeholder='yyyy/mm/dd' />
           To: <input 
-          type="text"
-          ref="historyTo"
-          placeholder="yyyy/mm/dd" />
-          <button type="button" onClick={this.handleSearch}>Search</button>
-          <button type="button" onClick={this.handleClearSearch}>Clear</button>
+          type='text'
+          ref='historyTo'
+          placeholder='yyyy/mm/dd' />
+          <button type='button' onClick={this.handleSearch}>Search</button>
+          <button type='button' onClick={this.handleClearSearch}>Clear</button>
         </div>*/}
 
-        <div>
-          {this.renderViewModes()}
-        </div>
-        <div>
-          {this.renderTimeList()}
-        </div>
-        <div>
-          {this.renderOrderBasedOnViewMode()}
+        { this.renderViewModes() }
+        <div className='content'>
+          <div className='left'>
+            { this.renderTimeList() }
+          </div>
+          <div className='right'>
+            <div className='summary'>
+              { this.renderSummary() }
+            </div>
+            { this.renderOrderBasedOnViewMode() }
+          </div>
+
         </div>
 
-        <div>
-          {this.renderSummary()}
-        </div>
+        
       </div>
     );
   }

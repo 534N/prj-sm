@@ -144,7 +144,7 @@ MyProfile = React.createClass({
       <div id='my-profile' className="container">
         <form>
           <div className='master-control'>
-            <div className="button prime large" onClick={this.handleSubmit}>保存</div>
+            <div className="button grant large" onClick={this.handleSubmit}>保存</div>
           </div>
           <div className='header'>联系方式</div>
           { this.renderContacts() }
@@ -220,7 +220,7 @@ MyProfile = React.createClass({
             {this.renderSchedules()}
           </div>
           <div className='master-control'>
-            <div className="button prime large" onClick={this.handleSubmit}>保存</div>
+            <div className="button grant large" onClick={this.handleSubmit}>保存</div>
           </div>
         </form>
       </div>
