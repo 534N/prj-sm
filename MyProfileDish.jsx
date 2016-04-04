@@ -23,6 +23,10 @@ MyProfileDish = React.createClass({
     return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
   },
 
+  getDishSupply() {
+    return parseInt(ReactDOM.findDOMNode(this.refs.dishSupply).value.trim());
+  },
+
   setDishDefaultName() {
     ReactDOM.findDOMNode(this.refs.dishName).value = ReactDOM.findDOMNode(this.refs.dishName).defaultValue;
   },
@@ -62,6 +66,12 @@ MyProfileDish = React.createClass({
             type="text"
             ref="dishNote"
             defaultValue={this.props.dish.note} />
+        </li>
+        <li>每日供应量: 
+          <input 
+            type="text"
+            ref="dishSupply"
+            defaultValue={this.props.dish.supply} />
         </li>
         <li>
           <span></span>

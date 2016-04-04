@@ -14,6 +14,7 @@ NavBar = React.createClass({
           <Link to='/myorder' className={`link ${this._activeClass('myorder')}`}>今日订单</Link>
           <Link to='/orderhistory' className={`link ${this._activeClass('orderhistory')}`}>历史订单</Link>
           <Link to='/myprofile' className={`link ${this._activeClass('myprofile')}`}>账户管理</Link>
+          <Link to='/mycontrol' className={`link ${this._activeClass('mycontrol')}`}>店面管理</Link>
         </div>
         <div className='avatar'>
           <AccountsUIWrapper />

@@ -21,6 +21,9 @@ Routes = React.createClass({
           <Route path='orderhistory' component={Authenticator}>
             <IndexRoute component={MyOrderHistory} />
           </Route>
+          <Route path='mycontrol' component={Authenticator}>
+            <IndexRoute component={MyControl} />
+          </Route>
         </Route>
       </Router>
     );
