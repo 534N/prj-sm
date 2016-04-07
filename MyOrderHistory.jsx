@@ -350,8 +350,6 @@ MyOrderHistory = React.createClass({
       const historyFrom = this.state.historyFrom ? new Date(new Date(this.state.historyFrom).toLocaleDateString()) : '';
       const historyTo = this.state.historyTo ? new Date(new Date(this.state.historyTo).getTime() + 60 * 60 * 24 * 1000) : '';
 
-      const customer = this.state.customer;
-
       let summary = {};
       let totalPrice = 0;
       this.data.orders.forEach((order) => {
@@ -382,7 +380,7 @@ MyOrderHistory = React.createClass({
             }
           }
         } else if (this.state.viewMode === 'Customer') {
-          if (order.customer.phone === customer) {
+          if (order.customer.phone === this.state.customer) {
             if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
               summary = order.items;
             } else {
