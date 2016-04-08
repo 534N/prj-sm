@@ -140,6 +140,8 @@ if (Meteor.isServer) {
       if (customer) {
         if (phone.match(/^\+86/)) {
           to = phone;
+        } else if (phone.length === 11) {
+          tp = `+86${phone}`;
         } else {
           to = '+1'+phone;
         }

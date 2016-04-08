@@ -118,7 +118,7 @@ SignIn = React.createClass({
     const password = React.findDOMNode(this.refs.password);
     const cpassword = React.findDOMNode(this.refs.cpassword);
 
-    if (password.value !== cpassword) {
+    if (password.value !== cpassword.value) {
       this.setState({
         warning: '两次密码输入不一致'
       });
