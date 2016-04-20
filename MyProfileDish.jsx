@@ -19,6 +19,14 @@ MyProfileDish = React.createClass({
     return ReactDOM.findDOMNode(this.refs.dishUnit).value.trim();
   },
 
+  getDishSpicyMin() {
+    return parseInt(ReactDOM.findDOMNode(this.refs.dishSpicyMin).value.trim());
+  },
+
+  getDishSpicyMax() {
+    return parseInt(ReactDOM.findDOMNode(this.refs.dishSpicyMax).value.trim());
+  },
+
   getDishNote() {
     return ReactDOM.findDOMNode(this.refs.dishNote).value.trim();
   },
@@ -60,6 +68,18 @@ MyProfileDish = React.createClass({
             type="text"
             ref="dishUnit"
             defaultValue={this.props.dish.unit} />
+        </li>
+        <li>最低辣度: 
+          <input
+            type="text"
+            ref="dishSpicyMin"
+            defaultValue={this.props.dish.spicyMin} />
+        </li>
+        <li>最高辣度: 
+          <input
+            type="text"
+            ref="dishSpicyMax"
+            defaultValue={this.props.dish.spicyMax} />
         </li>
         <li>备注: 
           <input

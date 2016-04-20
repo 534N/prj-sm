@@ -356,10 +356,9 @@ MyOrderHistory = React.createClass({
         if (this.state.viewMode === 'Daily') {
           if (order.createdAt >= startDay && order.createdAt < endDay) {
             if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
-              summary = order.items;
+              summary = JSON.parse(JSON.stringify(order.items));
             } else {
-              Object.keys(order.items).map(key => {
-                const item = order.items[key];
+              Object.keys(order.items).map((key) => {
                 summary[key].quantity += order.items[key].quantity;
               });
             }
@@ -369,10 +368,9 @@ MyOrderHistory = React.createClass({
           if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
             if (order.createdAt.getFullYear() === startDay.getFullYear() && order.createdAt.getMonth() === startDay.getMonth()) {
               if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
-                summary = order.items;
+                summary = JSON.parse(JSON.stringify(order.items));
               } else {
-                Object.keys(order.items).map(key => {
-                  const item = order.items[key];
+                Object.keys(order.items).map((key) => {
                   summary[key].quantity += order.items[key].quantity;
                 });
               }
@@ -382,10 +380,9 @@ MyOrderHistory = React.createClass({
         } else if (this.state.viewMode === 'Customer') {
           if (order.customer.phone === this.state.customer) {
             if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
-              summary = order.items;
+              summary = JSON.parse(JSON.stringify(order.items));
             } else {
-              Object.keys(order.items).map(key => {
-                const item = order.items[key];
+              Object.keys(order.items).map((key) => {
                 summary[key].quantity += order.items[key].quantity;
               });
             }

@@ -74,13 +74,15 @@ MyProfile = React.createClass({
       let dishName = this.refs['myProfileDish'+i].getDishName();
       let dishPrice = this.refs['myProfileDish'+i].getDishPrice();
       let dishUnit = this.refs['myProfileDish'+i].getDishUnit();
+      let dishSpicyMin = this.refs['myProfileDish'+i].getDishSpicyMin() ? this.refs['myProfileDish'+i].getDishSpicyMin() : 0;
+      let dishSpicyMax = this.refs['myProfileDish'+i].getDishSpicyMax() ? this.refs['myProfileDish'+i].getDishSpicyMax() : 0;
       let dishNote = this.refs['myProfileDish'+i].getDishNote();
-      let dishSupply = this.refs['myProfileDish'+i].getDishSupply();
+      let dishSupply = this.refs['myProfileDish'+i].getDishSupply() ? this.refs['myProfileDish'+i].getDishSupply() : 100;
       
       //if dish name and price are not empty, then update
       if (dishName && dishPrice) {
         dishIDs.push(dishID);
-        dish.push({name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, supply: dishSupply});
+        dish.push({name: dishName, price: dishPrice, unit: dishUnit, spicyMin: dishSpicyMin, spicyMax: dishSpicyMax, note: dishNote, supply: dishSupply});
       } else {
         //if dish name and price are both empty, reset to default value
         this.refs['myProfileDish'+i].setDishDefaultName();
@@ -107,14 +109,16 @@ MyProfile = React.createClass({
     const dishName = ReactDOM.findDOMNode(this.refs.newDishName).value.trim();
     const dishPrice = parseFloat(ReactDOM.findDOMNode(this.refs.newDishPrice).value.trim());
     const dishUnit = ReactDOM.findDOMNode(this.refs.newDishUnit).value.trim();
+    const dishSpicyMin = parseInt(ReactDOM.findDOMNode(this.refs.newDishSpicyMin).value.trim()) ? parseInt(ReactDOM.findDOMNode(this.refs.newDishSpicyMin).value.trim()) : 0;
+    const dishSpicyMax = parseInt(ReactDOM.findDOMNode(this.refs.newDishSpicyMax).value.trim()) ? parseInt(ReactDOM.findDOMNode(this.refs.newDishSpicyMax).value.trim()) : 0;
     const dishNote = ReactDOM.findDOMNode(this.refs.newDishNote).value.trim();
-    const dishSupply = parseInt(ReactDOM.findDOMNode(this.refs.newDishSupply).value.trim());
+    const dishSupply = parseInt(ReactDOM.findDOMNode(this.refs.newDishSupply).value.trim()) ? parseInt(ReactDOM.findDOMNode(this.refs.newDishSupply).value.trim()) : 100;
     const dishOwner = this.data.currentUser.username;
     // console.log(dishName);
     // console.log(dishPrice);
     // console.log(dishUnit);
     // console.log(dishNote);
-    const dish = {name: dishName, price: dishPrice, unit: dishUnit, note: dishNote, supply: dishSupply, owner: dishOwner};
+    const dish = {name: dishName, price: dishPrice, unit: dishUnit, spicyMin: dishSpicyMin, spicyMax: dishSpicyMax, note: dishNote, supply: dishSupply, owner: dishOwner};
 
     //if both dish name and price are there, then insert
     if (dishName && dishPrice) {
@@ -124,6 +128,8 @@ MyProfile = React.createClass({
     ReactDOM.findDOMNode(this.refs.newDishName).value = "";
     ReactDOM.findDOMNode(this.refs.newDishPrice).value = "";
     ReactDOM.findDOMNode(this.refs.newDishUnit).value = "";
+    ReactDOM.findDOMNode(this.refs.newDishSpicyMin).value = "";
+    ReactDOM.findDOMNode(this.refs.newDishSpicyMax).value = "";
     ReactDOM.findDOMNode(this.refs.newDishNote).value = "";
     ReactDOM.findDOMNode(this.refs.newDishSupply).value = "";
   },
@@ -181,6 +187,24 @@ MyProfile = React.createClass({
                     type="text"
                     ref="newDishUnit"
                     placeholder="单位" />
+                </span>
+              </li>
+              <li>
+                最低辣度: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishSpicyMin"
+                    placeholder="0为不辣，数字越高越辣" />
+                </span>
+              </li>
+              <li>
+                最高辣度: 
+                <span>
+                  <input 
+                    type="text"
+                    ref="newDishSpicyMax"
+                    placeholder="0为不辣，数字越高越辣" />
                 </span>
               </li>
               <li>
