@@ -24,19 +24,19 @@ MyOrder = React.createClass({
       // If hide completed is checked, filter tasks
       incompleteQuery = {
         completed: false,
-        createdAt: {
-          $gte: today,
-          $lt: tomorrow
-        },
+        // createdAt: {
+        //   $gte: today,
+        //   $lt: tomorrow
+        // },
         owner: Meteor.user().username
       };
 
       completedQuery = {
         completed: true,
-        createdAt: {
-          $gte: today,
-          $lt: tomorrow
-        },
+        // createdAt: {
+        //   $gte: today,
+        //   $lt: tomorrow
+        // },
         owner: Meteor.user().username
       };
 
@@ -70,11 +70,32 @@ MyOrder = React.createClass({
     return data;
   },
  
-  renderIncompleteOrders() {
-    console.debug('this.data', this.data)
-    return this.data.incompleteOrders.map((order) => {
+  renderIncompleteOrders(incompleteOrders) {
+    // console.debug('this.data', this.data)
+    // return this.data.incompleteOrders.map((order) => {
+    //   if (order.totalQuantity === 0) {
+    //     return;
+    //   }
+
+    //   return <Order
+    //     key={order._id}
+    //     order={order}
+    //     contacts={this.data.contacts} />;
+    // });
+
+    return incompleteOrders.map((order) => {
       if (order.totalQuantity === 0) {
         return;
+      }
+
+      if (order.timeGroup) {
+        return (
+          <tr key={order.timeGroup}>
+            <td>
+              {order.timeGroup}
+            </td>
+          </tr>
+        );
       }
 
       return <Order
@@ -84,10 +105,31 @@ MyOrder = React.createClass({
     });
   },
 
-  renderCompletedOrders() {
-    return this.data.completedOrders.map((order) => {
+  renderCompletedOrders(completedOrders) {
+    // return this.data.completedOrders.map((order) => {
+    //   if (order.totalQuantity === 0) {
+    //     return;
+    //   }
+
+    //   return <Order
+    //     key={order._id}
+    //     order={order}
+    //     contacts={this.data.contacts} />;
+    // });
+
+    return completedOrders.map((order) => {
       if (order.totalQuantity === 0) {
         return;
+      }
+
+      if (order.timeGroup) {
+        return (
+          <tr key={order.timeGroup}>
+            <td>
+              {order.timeGroup}
+            </td>
+          </tr>
+        );
       }
 
       return <Order
@@ -135,6 +177,59 @@ MyOrder = React.createClass({
       }
     );
 
+    let incompleteOrders = [];
+    let completedOrders = [];
+    let lastOrderYear = 0;
+    let lastOrderMonth = 0;
+    let lastOrderDate = 0;
+    this.data.incompleteOrders.forEach((order) => {
+      if (!incompleteOrders.length) {
+        incompleteOrders.push({timeGroup: moment(order.createdAt).format('L')});
+        incompleteOrders.push(order);
+        lastOrderYear = new Date(order.createdAt).getFullYear();
+        lastOrderMonth = new Date(order.createdAt).getMonth();
+        lastOrderDate = new Date(order.createdAt).getDate();
+      } else {
+        let currentOrderYear = new Date(order.createdAt).getFullYear();
+        let currentOrderMonth = new Date(order.createdAt).getMonth();
+        let currentOrderDate = new Date(order.createdAt).getDate();
+        if (currentOrderYear === lastOrderYear && currentOrderMonth === lastOrderMonth && currentOrderDate === lastOrderDate) {
+          incompleteOrders.push(order);
+        } else {
+          incompleteOrders.push({timeGroup: moment(order.createdAt).format('L')});
+          incompleteOrders.push(order);
+          lastOrderYear = new Date(order.createdAt).getFullYear();
+          lastOrderMonth = new Date(order.createdAt).getMonth();
+          lastOrderDate = new Date(order.createdAt).getDate();
+        }
+      }
+    });
+    console.log(incompleteOrders);
+
+    this.data.completedOrders.forEach((order) => {
+      if (!completedOrders.length) {
+        completedOrders.push({timeGroup: moment(order.createdAt).format('L')});
+        completedOrders.push(order);
+        lastOrderYear = new Date(order.createdAt).getFullYear();
+        lastOrderMonth = new Date(order.createdAt).getMonth();
+        lastOrderDate = new Date(order.createdAt).getDate();
+      } else {
+        let currentOrderYear = new Date(order.createdAt).getFullYear();
+        let currentOrderMonth = new Date(order.createdAt).getMonth();
+        let currentOrderDate = new Date(order.createdAt).getDate();
+        if (currentOrderYear === lastOrderYear && currentOrderMonth === lastOrderMonth && currentOrderDate === lastOrderDate) {
+          completedOrders.push(order);
+        } else {
+          completedOrders.push({timeGroup: moment(order.createdAt).format('L')});
+          completedOrders.push(order);
+          lastOrderYear = new Date(order.createdAt).getFullYear();
+          lastOrderMonth = new Date(order.createdAt).getMonth();
+          lastOrderDate = new Date(order.createdAt).getDate();
+        }
+      }
+    });
+    console.log(completedOrders);
+
     return (
       <div className='container' id='order-list'>
         <header>
@@ -160,11 +255,11 @@ MyOrder = React.createClass({
           <tbody>
           {
             this.state.current === 'incomplete' &&
-            this.renderIncompleteOrders()
+            this.renderIncompleteOrders(incompleteOrders)
           }
           {
             this.state.current === 'completed' &&
-            this.renderCompletedOrders()
+            this.renderCompletedOrders(completedOrders)
           }
           </tbody>
         </table>

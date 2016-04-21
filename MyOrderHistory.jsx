@@ -5,7 +5,8 @@ MyOrderHistory = React.createClass({
       historyFrom: '',
       historyTo: '',
       viewMode: 'Daily',
-      day: ''
+      day: '',
+      customer: ''
     }
     moment.locale();
   },
@@ -50,7 +51,7 @@ MyOrderHistory = React.createClass({
       if (days[track.index].date === day) {
         days[track.index].count += 1;
       } else {
-        days.push({date:day, count: 1});
+        days.push({date: day, count: 1});
         track.index++;
       }
     }
@@ -79,6 +80,12 @@ MyOrderHistory = React.createClass({
     return inRange;
   },
 
+  handleCustomerOrder(customer) {
+    this.setState({
+      customer: customer
+    });
+  },
+
   handleDayOrder(day) {
     this.setState({
       day: day
@@ -88,7 +95,8 @@ MyOrderHistory = React.createClass({
   handleView(mode) {
     this.setState({
       viewMode: mode,
-      day: ''
+      day: '',
+      customer: ''
     });
   },
 
@@ -98,7 +106,7 @@ MyOrderHistory = React.createClass({
       Object.keys(items).map(key => {
         const item = items[key];
 
-        console.debug('item: ', item);
+        // console.debug('item: ', item);
         if (item.quantity === 0) {
           return;
         }
@@ -195,6 +203,17 @@ MyOrderHistory = React.createClass({
         }
       });
     }
+
+    if (this.state.customer) {
+      const customer = this.state.customer;
+      return this.data.orders.map((order) => {
+        if (order.customer.phone === customer) {
+          return (
+            <div className='order-container' key={order._id}>{this.renderOrder(order)}</div>
+          );
+        }
+      });
+    }
   },
 
   renderViewModes() {
@@ -212,16 +231,74 @@ MyOrderHistory = React.createClass({
       }
     );
 
+    const customerClass = classNames(
+      'view-mode',
+      {
+        active: this.state.viewMode === 'Customer'
+      }
+    );
+
     return (
       <div className='view-mode-container'>
         <div href='#' className={dailyClass} onClick={this.handleView.bind(this, 'Daily')}>按日结算</div>
         <div href='#' className={monthClass} onClick={this.handleView.bind(this, 'Monthly')}>按月结算</div>
+        <div href='#' className={customerClass} onClick={this.handleView.bind(this, 'Customer')}>按顾客结算</div>
       </div>
     )
   },
 
   renderTimeList() {
     // if (this.state.search) {
+    //if view by customers
+    if (this.state.viewMode == 'Customer') {
+      let customers = [];
+      let temp = {};
+      
+      this.data.orders.forEach((order) => {
+        if (Object.keys(temp).length === 0 && JSON.stringify(temp) === JSON.stringify({})) {
+          temp[order.customer.phone] = 1;
+        } else {
+          if (temp.hasOwnProperty(order.customer.phone)) {
+            temp[order.customer.phone] += 1;
+          } else {
+            temp[order.customer.phone] = 1;
+          }
+        }
+      });
+
+      for (let customer in temp) {
+        customers.push({customer: customer, count: temp[customer]});
+      }
+      //sort customer in descending order based on order count
+      customers.sort((a, b) => {
+        return parseInt(b.count) - parseInt(a.count);
+      });
+
+      return (
+        <ul>
+        {
+          customers.map((c) => {
+            const customerClass = classNames(
+              'history-date',
+              {
+                active: this.state.customer === c.customer
+              }
+            );
+
+            return (
+              <li key={c.customer}>
+                <div href='#' onClick={this.handleCustomerOrder.bind(this, c.customer)} className={customerClass}>
+                  <span>{c.customer}</span>
+                  <span className='small fade'> ({c.count}单)</span>
+                </div>
+              </li>
+            );
+          })
+        }
+        </ul>
+      );
+    } else {
+      //else if view by either daily or monthly
       let days = [];
       let day = '';
       let track = {};
@@ -261,11 +338,12 @@ MyOrderHistory = React.createClass({
         }
         </ul>
       )
+    }
     // }
   },
 
   renderSummary() {
-    if (this.state.day) {
+    if (this.state.day || this.state.customer) {
       const startDay = new Date(this.state.day);
       const endDay = new Date(new Date(this.state.day).getTime() + 60 * 60 * 24 * 1000);
 
@@ -278,10 +356,9 @@ MyOrderHistory = React.createClass({
         if (this.state.viewMode === 'Daily') {
           if (order.createdAt >= startDay && order.createdAt < endDay) {
             if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
-              summary = order.items;
+              summary = JSON.parse(JSON.stringify(order.items));
             } else {
-              Object.keys(order.items).map(key => {
-                const item = order.items[key];
+              Object.keys(order.items).map((key) => {
                 summary[key].quantity += order.items[key].quantity;
               });
             }
@@ -291,15 +368,25 @@ MyOrderHistory = React.createClass({
           if (this.orderDateInRange(order.createdAt, historyFrom, historyTo)) {
             if (order.createdAt.getFullYear() === startDay.getFullYear() && order.createdAt.getMonth() === startDay.getMonth()) {
               if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
-                summary = order.items;
+                summary = JSON.parse(JSON.stringify(order.items));
               } else {
-                Object.keys(order.items).map(key => {
-                  const item = order.items[key];
+                Object.keys(order.items).map((key) => {
                   summary[key].quantity += order.items[key].quantity;
                 });
               }
               totalPrice += order.totalPrice;
             }
+          }
+        } else if (this.state.viewMode === 'Customer') {
+          if (order.customer.phone === this.state.customer) {
+            if (Object.keys(summary).length === 0 && JSON.stringify(summary) === JSON.stringify({})) {
+              summary = JSON.parse(JSON.stringify(order.items));
+            } else {
+              Object.keys(order.items).map((key) => {
+                summary[key].quantity += order.items[key].quantity;
+              });
+            }
+            totalPrice += order.totalPrice;
           }
         }
       });

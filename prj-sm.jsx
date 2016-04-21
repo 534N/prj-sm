@@ -242,7 +242,13 @@ Meteor.methods({
 
   setDispatched(orderID, value) {
     const order = Orders.findOne(orderID);
-    Orders.update(orderID, { $set: { dispatched: value} });
+    const dispatchedAt = new Date();
+    Orders.update(orderID, { $set: { dispatched: value, dispatchedAt: dispatchedAt} });
+  },
+
+  deliverOrder(orderID) {
+    const order = Orders.findOne(orderID);
+    Orders.update(orderID, { $set: { delivered: true, deliveredAt: new Date() }});
   },
 
   addDish(dish) {

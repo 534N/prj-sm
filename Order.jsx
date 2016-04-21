@@ -81,7 +81,11 @@ Order = React.createClass({
           <div className='button progress' onClick={this._finishProcessing}>处理完毕</div>
           {
             this.props.order.completed && 
-            <div className='done'>{moment(this.props.order.completedAt).format('LT')}</div>
+            <div className='button deliver' onClick={this._finishDeliver}>传递完毕</div>
+          }
+          {
+            this.props.order.delivered && 
+            <div className='done'>{moment(this.props.order.deliveredAt).format('LT')}</div>
           }
         </td>
       </tr>
@@ -110,5 +114,9 @@ Order = React.createClass({
       processing: false,
       new: false,
     });
+  },
+
+  _finishDeliver() {
+    Meteor.call('deliverOrder', this.props.order._id);
   }
 });
